@@ -18,7 +18,8 @@ import {
   startGame,
   updateCurrentCard,
   advanceRoomTurn,
-  updateRoomSettings
+  updateRoomSettings,
+  markPlayerDrink
 } from './firebase/roomService.js';
 
 // ─────────────────────────────────────────────
@@ -136,13 +137,10 @@ async function handleMpDraw() {
 async function handleMpNextTurn(tookDrink) {
   if (!roomData) return;
   if (tookDrink) {
-    // bump drinksTaken for current player locally then push
     const players = roomData.players.map((p, i) =>
       i === roomData.currentPlayerIndex ? { ...p, drinksTaken: (p.drinksTaken || 0) + 1 } : p
     );
-    await import('./firebase/roomService.js').then(({ markPlayerDrink }) => {
-      if (markPlayerDrink) return markPlayerDrink(roomCode, players);
-    }).catch(() => {});
+    await markPlayerDrink(roomCode, players);
   }
   const nextIndex = (roomData.currentPlayerIndex + 1) % roomData.players.length;
   await advanceRoomTurn(roomCode, nextIndex);

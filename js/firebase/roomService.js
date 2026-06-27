@@ -95,3 +95,7 @@ export async function advanceRoomTurn(code, nextIndex) {
 export async function updateRoomSettings(code, settings) {
   await updateDoc(doc(db, "rooms", code), { settings });
 }
+
+export async function markPlayerDrink(code, players) {
+  await updateDoc(doc(db, "rooms", code), { players });
+}
