@@ -1,3 +1,5 @@
+import { flip as soundFlip, omg as soundOmg } from '../core/sound.js';
+
 const cardEl   = document.querySelector('#card');
 const levelEl  = document.querySelector('#cardLevel');
 const typeEl   = document.querySelector('#cardType');
@@ -21,6 +23,8 @@ function present(level, id) {
     cardEl.dataset.cardId = idStr;
     cardEl.classList.remove('revealed');
     void cardEl.offsetWidth;            // restart the flip
+    soundFlip();
+    if (Number(level) === 4) soundOmg();
   }
   cardEl.classList.add('revealed');
 }
