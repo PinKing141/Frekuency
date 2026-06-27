@@ -89,3 +89,74 @@
 .rules-list .lvl.l2 { color: var(--l2); box-shadow: 0 0 14px -5px var(--l2); }
 .rules-list .lvl.l3 { color: var(--l3); box-shadow: 0 0 14px -5px var(--l3); }
 .rules-list .lvl.l4 { color: var(--l4); box-shadow: 0 0 14px -5px var(--l4); }
+
+/* Card debug — floating trigger (bottom-left, only shown when unlocked) */
+.debug-toggle {
+  position: fixed;
+  left: 14px;
+  bottom: 14px;
+  z-index: 60;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  display: grid;
+  place-content: center;
+  font-size: 1.1rem;
+  background: var(--glass-strong);
+  border: 1px solid var(--stroke);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.45);
+  transition: transform 0.12s var(--ease), box-shadow 0.2s;
+}
+.debug-toggle[hidden] { display: none; }
+.debug-toggle:hover { transform: translateY(-2px); box-shadow: 0 12px 26px -4px var(--cyan); }
+
+.dbg-summary { color: var(--muted); font-size: 0.82rem; line-height: 1.5; margin: 0 0 14px; }
+#debugSearch { margin-bottom: 14px; }
+
+#debugList { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
+
+.dbg-divider {
+  color: var(--cyan);
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin: 14px 0 4px;
+}
+
+.dbg-row {
+  background: var(--glass);
+  border: 1px solid var(--stroke);
+  border-radius: 12px;
+  padding: 10px 12px;
+}
+.dbg-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 6px; }
+.dbg-lvl {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.72rem;
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--stroke);
+}
+.dbg-lvl.l1 { color: var(--l1); }
+.dbg-lvl.l2 { color: var(--l2); }
+.dbg-lvl.l3 { color: var(--l3); }
+.dbg-lvl.l4 { color: var(--l4); }
+.dbg-type { font-size: 0.76rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
+.dbg-src {
+  margin-left: auto;
+  font-size: 0.64rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 2px 7px;
+  border-radius: 999px;
+  border: 1px solid var(--stroke);
+  color: var(--faint);
+}
+.dbg-src.local { color: var(--cyan); border-color: rgba(95, 224, 255, 0.4); }
+.dbg-src.room  { color: var(--accent); border-color: rgba(255, 79, 227, 0.4); }
+.dbg-text { color: var(--text); font-size: 0.95rem; line-height: 1.35; }
+.dbg-id { color: var(--faint); font-size: 0.7rem; font-family: ui-monospace, "SFMono-Regular", Menlo, monospace; margin-top: 4px; }

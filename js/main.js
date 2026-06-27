@@ -7,6 +7,7 @@ import { clearPlayers } from './core/storage.js';
 import { customCards, addCustomCard, removeCustomCard, buildCustomCard } from './core/customCards.js';
 import { click as soundClick, drink as soundDrink, isMuted, toggleMute } from './core/sound.js';
 import { showScreen } from './ui/screens.js';
+import { setupDebug } from './ui/debug.js';
 import { renderCard, renderRoomCard } from './ui/renderCard.js';
 import { renderPlayers, renderScores } from './ui/renderPlayers.js';
 import { escapeHtml } from './utils/helpers.js';
@@ -394,3 +395,4 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeRules()
 refreshPlayers();
 renderScores(state.players);
 refreshCustomCards();
+setupDebug({ getRoomCustomCards: () => (roomData && roomData.customCards) || [] });

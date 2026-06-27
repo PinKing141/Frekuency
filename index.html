@@ -282,6 +282,19 @@
   <!-- Floating mute toggle -->
   <button id="muteToggle" class="mute-toggle" aria-label="Toggle sound" title="Toggle sound">🔊</button>
 
+  <!-- Hidden card debug (unlocked by code) -->
+  <button id="debugBtn" class="debug-toggle" hidden aria-label="Card debug" title="Card debug">🐞</button>
+
+  <div id="debugModal" class="modal" role="dialog" aria-modal="true" aria-label="Card debug">
+    <div class="modal-card panel">
+      <button id="closeDebug" class="ghost-btn modal-close" aria-label="Close">✕</button>
+      <h2>Card debug</h2>
+      <p id="debugSummary" class="dbg-summary"></p>
+      <input id="debugSearch" type="text" placeholder="Search text, id, type, tag…" />
+      <ul id="debugList"></ul>
+    </div>
+  </div>
+
   <!-- How-to-play modal -->
   <div id="rulesModal" class="modal" role="dialog" aria-modal="true" aria-label="How to play">
     <div class="modal-card panel">
