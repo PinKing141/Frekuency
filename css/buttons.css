@@ -2,25 +2,56 @@
 .secondary-btn,
 .danger-btn,
 .ghost-btn {
-  border-radius: 999px;
-  padding: 13px 18px;
-  color: white;
+  position: relative;
+  border-radius: var(--radius-pill);
+  padding: 15px 22px;
+  color: #fff;
   font-weight: 800;
+  font-size: 0.98rem;
+  letter-spacing: 0.03em;
+  transition: transform 0.12s var(--ease), box-shadow 0.25s var(--ease), filter 0.2s;
 }
 
-.primary-btn  { background: linear-gradient(135deg, #ff4fc3, #8c47ff); }
-.secondary-btn { background: #5a2a65; }
-.danger-btn   { background: var(--danger); }
-.ghost-btn    { background: rgba(255,255,255,.1); }
+.primary-btn {
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  box-shadow: 0 10px 28px -8px var(--accent), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+}
+.secondary-btn {
+  background: var(--glass-strong);
+  border: 1px solid rgba(255, 79, 227, 0.35);
+  box-shadow: 0 0 0 0 transparent;
+}
+.danger-btn {
+  background: linear-gradient(135deg, #ff5b6e, var(--danger));
+  box-shadow: 0 10px 28px -10px var(--danger), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+.ghost-btn {
+  background: var(--glass);
+  border: 1px solid var(--stroke);
+  color: var(--muted);
+  padding: 11px 16px;
+  font-size: 0.88rem;
+}
 
-.wide { width: 100%; margin-top: 18px; }
+.primary-btn:hover { transform: translateY(-2px); box-shadow: 0 16px 36px -8px var(--accent), inset 0 1px 0 rgba(255, 255, 255, 0.4); }
+.secondary-btn:hover { transform: translateY(-2px); box-shadow: 0 0 26px -6px var(--accent); border-color: var(--accent); }
+.danger-btn:hover { transform: translateY(-2px); box-shadow: 0 16px 36px -8px var(--danger); }
+.ghost-btn:hover { color: var(--text); border-color: var(--stroke); background: var(--glass-strong); }
+
+.primary-btn:active,
+.secondary-btn:active,
+.danger-btn:active,
+.ghost-btn:active { transform: translateY(1px) scale(0.99); filter: brightness(0.96); }
+
+.wide { width: 100%; }
 
 .game-actions {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 12px;
-  margin: 16px 0;
+  margin: 18px 0;
 }
+.game-actions button { padding: 18px; font-size: 1.05rem; }
 
 @media (max-width: 680px) {
   .game-actions { grid-template-columns: 1fr; }

@@ -1,33 +1,53 @@
-/* The card art (assets/cards/front-lN.*) is only the visual frame.
-   The level, type, text and footer are HTML overlaid on top, so the
-   wording is never baked into the image and stays easy to update.
-   To use your own PNGs: drop them in assets/cards/ and point the four
-   background-image rules below at them. */
+/* The card has two faces. The back (FQ deck art) shows while idle; drawing a
+   card flips it to the front. The front art (assets/cards/front-lN.*) is only
+   the frame — the level, type, text and footer are HTML overlaid on top, so
+   wording is never baked into the image. Swap in your own PNGs by changing the
+   four --front URLs in the per-level rules below. */
 
 .card-scene {
   width: min(86vw, 360px);
   margin: 18px auto;
-  perspective: 1200px;
+  perspective: 1600px;
 }
 
 .card {
   position: relative;
   width: 100%;
   aspect-ratio: 5 / 7;
+  transform-style: preserve-3d;
+  transition: transform 0.6s var(--ease);
+  transform: rotateY(0deg);              /* idle: show the back */
+}
+.card.revealed { transform: rotateY(180deg); }
+
+.card-face {
+  position: absolute;
+  inset: 0;
   border-radius: 28px;
   overflow: hidden;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
   background-color: #07060a;
   background-size: cover;
   background-position: center;
+  box-shadow:
+    0 26px 60px rgba(0, 0, 0, 0.62),
+    0 0 48px -10px var(--glow, var(--accent));
+}
+
+.card-back {
+  background-image: url("../assets/cards/back-main.svg");
+}
+
+.card-front {
+  transform: rotateY(180deg);
+  background-image: var(--front);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   padding: 11% 12% 10%;
   text-align: center;
   color: #fff;
-  box-shadow:
-    0 24px 60px rgba(0, 0, 0, 0.6),
-    0 0 46px -8px var(--glow, rgba(255, 79, 227, 0.5));
 }
 
 .card-meta {
@@ -35,12 +55,13 @@
   justify-content: space-between;
   align-items: center;
   gap: 8px;
-  font-size: clamp(0.72rem, 3vw, 0.95rem);
-  font-weight: 900;
+  font-family: var(--font-display);
+  font-size: clamp(0.66rem, 2.8vw, 0.88rem);
+  font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--ink, #fff);
-  text-shadow: 0 0 10px var(--glow, #ff4fe3);
+  text-shadow: 0 0 10px var(--glow, var(--accent));
 }
 
 .card-body {
@@ -55,46 +76,30 @@
 .card-icon {
   font-size: clamp(2.2rem, 9vw, 3.2rem);
   line-height: 1;
-  filter: drop-shadow(0 0 14px var(--glow, #ff4fe3));
+  filter: drop-shadow(0 0 14px var(--glow, var(--accent)));
 }
 
 #cardText {
   margin: 0;
-  font-size: clamp(1.2rem, 5.4vw, 2rem);
+  font-size: clamp(1.2rem, 5.2vw, 1.95rem);
   line-height: 1.16;
-  font-weight: 900;
+  font-weight: 800;
   text-wrap: balance;
   color: var(--ink, #fff);
-  text-shadow: 0 0 12px var(--glow, #ff4fe3), 0 2px 6px rgba(0, 0, 0, 0.55);
+  text-shadow: 0 0 12px var(--glow, var(--accent)), 0 2px 6px rgba(0, 0, 0, 0.6);
 }
 
 #cardFooter {
   margin: 0;
-  font-size: clamp(0.74rem, 3vw, 0.95rem);
-  font-weight: 800;
+  font-size: clamp(0.72rem, 3vw, 0.92rem);
+  font-weight: 700;
   opacity: 0.92;
   color: var(--ink, #fff);
-  text-shadow: 0 0 8px var(--glow, #ff4fe3), 0 1px 4px rgba(0, 0, 0, 0.5);
+  text-shadow: 0 0 8px var(--glow, var(--accent)), 0 1px 4px rgba(0, 0, 0, 0.55);
 }
 
 /* Per-level frame art + text ink/glow colours */
-.level-1 {
-  --ink: #e7fbff;
-  --glow: #37cfff;
-  background-image: url("../assets/cards/front-l1.svg");
-}
-.level-2 {
-  --ink: #ffe8dd;
-  --glow: #ff5a3c;
-  background-image: url("../assets/cards/front-l2.svg");
-}
-.level-3 {
-  --ink: #ffe6f6;
-  --glow: #ff5fcf;
-  background-image: url("../assets/cards/front-l3.svg");
-}
-.level-4 {
-  --ink: #ffd9f6;
-  --glow: #ff4fe3;
-  background-image: url("../assets/cards/front-l4.svg");
-}
+.level-1 { --ink: #e7fbff; --glow: #37cfff; --front: url("../assets/cards/front-l1.svg"); }
+.level-2 { --ink: #ffe8dd; --glow: #ff5a3c; --front: url("../assets/cards/front-l2.svg"); }
+.level-3 { --ink: #ffe6f6; --glow: #ff5fcf; --front: url("../assets/cards/front-l3.svg"); }
+.level-4 { --ink: #ffd9f6; --glow: #ff4fe3; --front: url("../assets/cards/front-l4.svg"); }
