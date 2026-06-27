@@ -1,6 +1,8 @@
 import { state } from './gameState.js';
 import { cards } from '../data/cards.js';
 
+// --- Solo mode helpers (read settings from DOM) ---
+
 function selectedLevels() {
   return [...document.querySelectorAll('.levelCheck:checked')].map(c => Number(c.value));
 }
@@ -47,4 +49,48 @@ export function drawCard() {
 
   state.currentCard = card;
   return { card, text, current };
+}
+
+// --- Multiplayer mode: draws using room data, no DOM reads ---
+
+export function drawCardForRoom(room) {
+  const { players, currentPlayerIndex, usedCardIds = [], settings } = room;
+  const current = players[currentPlayerIndex];
+  if (!current) return null;
+
+  const maxLevel = settings.maxLevel || 4;
+  const allowed = cards.filter(card => {
+    if (card.level > maxLevel) return false;
+    if (!settings.allowPhysicalCards && card.tags.includes('contact')) return false;
+    if (!settings.allowTargetedCards && card.tags.includes('target')) return false;
+    return true;
+  });
+
+  if (!allowed.length) return null;
+
+  let card = allowed[Math.floor(Math.random() * allowed.length)];
+  let attempts = 0;
+  while (usedCardIds.includes(card.id) && attempts < 30) {
+    card = allowed[Math.floor(Math.random() * allowed.length)];
+    attempts++;
+  }
+
+  let target = null;
+  if (card.tags.includes('target') && settings.allowTargetedCards) {
+    const pool = players.filter(p => p.id !== current.id);
+    if (pool.length > 0) target = pool[Math.floor(Math.random() * pool.length)];
+  }
+
+  const resolvedText = card.text
+    .replaceAll('{player}', current.name)
+    .replaceAll('{target}', target ? target.name : 'another player');
+
+  return {
+    id: card.id,
+    level: card.level,
+    type: card.type,
+    icon: card.icon,
+    resolvedText,
+    currentPlayerName: current.name
+  };
 }

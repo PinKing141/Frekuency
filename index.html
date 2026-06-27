@@ -9,23 +9,24 @@
 <body>
   <main class="app-shell">
 
-    <!-- Start screen -->
+    <!-- ── Start screen ── -->
     <section id="screen-start" class="screen active">
       <div class="hero-card">
         <p class="eyebrow">Freak or Drink</p>
         <h1>Freakquency</h1>
-        <p class="tagline">A one-phone party card game for messy friends, brave answers, and safe chaos.</p>
+        <p class="tagline">A party card game for messy friends, brave answers, and safe chaos.</p>
         <div class="name-row">
           <span>L1 Icebreaker</span>
           <span>L2 Spicy</span>
           <span>L3 Freaky</span>
           <span>L4 OMG</span>
         </div>
-        <button id="startSetup" class="primary-btn">Start Game</button>
+        <button id="startSetup" class="primary-btn wide">Solo / Pass the Phone</button>
+        <button id="startMultiplayer" class="secondary-btn wide" style="margin-top:10px">Multiplayer</button>
       </div>
     </section>
 
-    <!-- Setup screen -->
+    <!-- ── Solo setup screen ── -->
     <section id="screen-setup" class="screen">
       <header class="topbar">
         <h2>Setup</h2>
@@ -75,7 +76,7 @@
           <label><input type="checkbox" class="levelCheck" value="3" /> L3 Freaky</label>
           <label><input type="checkbox" class="levelCheck" value="4" /> L4 OMG</label>
         </div>
-        <p class="warning">Only play L3/L4 with adults who clearly opted in. This version avoids explicit forced sexual acts and uses pass/drink options.</p>
+        <p class="warning">Only play L3/L4 with adults who clearly opted in.</p>
       </div>
 
       <div class="panel">
@@ -91,7 +92,99 @@
       <button id="beginGame" class="primary-btn wide">Begin</button>
     </section>
 
-    <!-- Game screen -->
+    <!-- ── Multiplayer lobby screen ── -->
+    <section id="screen-lobby" class="screen">
+      <header class="topbar">
+        <button id="lobbyBack" class="ghost-btn">← Back</button>
+        <h2>Multiplayer</h2>
+        <span></span>
+      </header>
+
+      <div class="panel">
+        <h3>Create a room</h3>
+        <p class="muted-center" style="text-align:left; margin:0 0 14px">You'll be the host. Share the room code with friends.</p>
+        <div class="form-grid">
+          <label>
+            Your name
+            <input id="hostName" type="text" maxlength="18" placeholder="e.g. Favour" />
+          </label>
+          <label>
+            Gender
+            <select id="hostGender">
+              <option value="any">Prefer not to say / Any</option>
+              <option value="woman">Woman</option>
+              <option value="man">Man</option>
+              <option value="nonbinary">Non-binary</option>
+            </select>
+          </label>
+        </div>
+        <button id="createRoomBtn" class="primary-btn wide">Create Room</button>
+      </div>
+
+      <div class="divider">or</div>
+
+      <div class="panel">
+        <h3>Join a room</h3>
+        <div class="form-grid">
+          <label>
+            Your name
+            <input id="joinName" type="text" maxlength="18" placeholder="e.g. Temi" />
+          </label>
+          <label>
+            Room code
+            <input id="joinCode" type="text" maxlength="6" placeholder="e.g. ABC12" style="text-transform:uppercase" />
+          </label>
+          <label>
+            Gender
+            <select id="joinGender">
+              <option value="any">Prefer not to say / Any</option>
+              <option value="woman">Woman</option>
+              <option value="man">Man</option>
+              <option value="nonbinary">Non-binary</option>
+            </select>
+          </label>
+        </div>
+        <button id="joinRoomBtn" class="secondary-btn wide">Join Room</button>
+      </div>
+    </section>
+
+    <!-- ── Waiting / lobby room screen ── -->
+    <section id="screen-waiting" class="screen">
+      <div class="panel" style="text-align:center; margin-top:10vh">
+        <p class="eyebrow">Room Code</p>
+        <p id="waitingRoomCode" class="room-code-display">-----</p>
+        <p class="tagline">Share this code with your friends.</p>
+      </div>
+
+      <div class="panel">
+        <h3>Players in room (<span id="playerCount">0</span>)</h3>
+        <ul id="waitingPlayerList" class="player-list"></ul>
+      </div>
+
+      <!-- Host only settings -->
+      <div id="hostSettings" class="panel" style="display:none">
+        <h3>Game settings</h3>
+        <label style="margin-bottom:10px">
+          Max card level
+          <select id="mpMaxLevel">
+            <option value="1">L1 Icebreaker only</option>
+            <option value="2" selected>L1 + L2 Spicy</option>
+            <option value="3">Up to L3 Freaky</option>
+            <option value="4">All levels including L4 OMG</option>
+          </select>
+        </label>
+        <div class="checks">
+          <label><input id="mpAllowTarget"  type="checkbox" checked /> Allow cards that target another player</label>
+          <label><input id="mpAllowContact" type="checkbox" /> Allow physical-contact cards</label>
+        </div>
+      </div>
+
+      <button id="startMultiGame" class="primary-btn wide" style="display:none">Start Game</button>
+      <p id="waitingForHost" class="muted-center" style="display:none">Waiting for the host to start...</p>
+      <button id="leaveRoom" class="ghost-btn wide" style="margin-top:10px">Leave Room</button>
+    </section>
+
+    <!-- ── Game screen (solo + multiplayer) ── -->
     <section id="screen-game" class="screen">
       <header class="game-header">
         <button id="backSetup" class="ghost-btn">Setup</button>
@@ -101,6 +194,12 @@
         </div>
         <button id="newCard" class="ghost-btn">New Card</button>
       </header>
+
+      <!-- Shown only in multiplayer -->
+      <div id="room-bar" class="room-bar" hidden>
+        Room: <strong id="roomCodeDisplay"></strong>
+        <span id="onlineCount"></span>
+      </div>
 
       <article id="card" class="card level-1">
         <div class="card-meta">

@@ -71,6 +71,59 @@ h2, h3 { margin: 0 0 12px; }
 
 .scoreboard { margin-top: 16px; }
 
+/* Multiplayer room bar */
+.room-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(255,255,255,.07);
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: 14px;
+  padding: 10px 16px;
+  margin-bottom: 12px;
+  font-size: .85rem;
+  color: var(--muted);
+}
+.room-bar strong { color: var(--accent-2); letter-spacing: .1em; }
+
+/* Waiting / lobby */
+.room-code-display {
+  font-size: clamp(2.8rem, 14vw, 5rem);
+  letter-spacing: .18em;
+  margin: 8px 0 4px;
+  color: var(--accent-2);
+}
+
+.divider {
+  text-align: center;
+  color: var(--muted);
+  font-size: .85rem;
+  margin: 6px 0;
+  position: relative;
+}
+.divider::before,
+.divider::after {
+  content: '';
+  display: inline-block;
+  width: 38%;
+  height: 1px;
+  background: rgba(255,255,255,.12);
+  vertical-align: middle;
+  margin: 0 8px;
+}
+
+.muted-center { text-align: center; color: var(--muted); font-size: .9rem; margin: 10px 0; }
+
+.tag-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
+.tag {
+  background: rgba(255,255,255,.08);
+  border-radius: 999px;
+  padding: 4px 12px;
+  font-size: .78rem;
+  color: var(--muted);
+}
+.tag.host { background: rgba(255,79,195,.18); color: var(--accent); }
+
 @media (max-width: 680px) {
   .app-shell { padding: 14px; }
   .hero-card { margin-top: 6vh; padding: 24px; }

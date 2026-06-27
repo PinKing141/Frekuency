@@ -1,7 +1,9 @@
 const screens = {
-  start: document.querySelector('#screen-start'),
-  setup: document.querySelector('#screen-setup'),
-  game:  document.querySelector('#screen-game')
+  start:   document.querySelector('#screen-start'),
+  setup:   document.querySelector('#screen-setup'),
+  game:    document.querySelector('#screen-game'),
+  lobby:   document.querySelector('#screen-lobby'),
+  waiting: document.querySelector('#screen-waiting')
 };
 
 export function showScreen(name) {
