@@ -1,35 +1,100 @@
+/* The card art (assets/cards/front-lN.*) is only the visual frame.
+   The level, type, text and footer are HTML overlaid on top, so the
+   wording is never baked into the image and stays easy to update.
+   To use your own PNGs: drop them in assets/cards/ and point the four
+   background-image rules below at them. */
+
+.card-scene {
+  width: min(86vw, 360px);
+  margin: 18px auto;
+  perspective: 1200px;
+}
+
 .card {
-  min-height: 390px;
-  padding: 24px;
-  display: grid;
-  align-content: space-between;
+  position: relative;
+  width: 100%;
+  aspect-ratio: 5 / 7;
+  border-radius: 28px;
+  overflow: hidden;
+  background-color: #07060a;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 11% 12% 10%;
   text-align: center;
+  color: #fff;
+  box-shadow:
+    0 24px 60px rgba(0, 0, 0, 0.6),
+    0 0 46px -8px var(--glow, rgba(255, 79, 227, 0.5));
 }
 
 .card-meta {
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  font-size: clamp(0.72rem, 3vw, 0.95rem);
   font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink, #fff);
+  text-shadow: 0 0 10px var(--glow, #ff4fe3);
 }
 
-.card-icon { font-size: 4rem; margin-top: 18px; }
+.card-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.card-icon {
+  font-size: clamp(2.2rem, 9vw, 3.2rem);
+  line-height: 1;
+  filter: drop-shadow(0 0 14px var(--glow, #ff4fe3));
+}
 
 #cardText {
-  font-size: clamp(1.55rem, 7vw, 3.2rem);
-  line-height: 1.12;
-  font-weight: 950;
-  margin: 20px 0;
+  margin: 0;
+  font-size: clamp(1.2rem, 5.4vw, 2rem);
+  line-height: 1.16;
+  font-weight: 900;
+  text-wrap: balance;
+  color: var(--ink, #fff);
+  text-shadow: 0 0 12px var(--glow, #ff4fe3), 0 2px 6px rgba(0, 0, 0, 0.55);
 }
 
-#cardFooter { color: rgba(255,255,255,.8); margin: 0; }
+#cardFooter {
+  margin: 0;
+  font-size: clamp(0.74rem, 3vw, 0.95rem);
+  font-weight: 800;
+  opacity: 0.92;
+  color: var(--ink, #fff);
+  text-shadow: 0 0 8px var(--glow, #ff4fe3), 0 1px 4px rgba(0, 0, 0, 0.5);
+}
 
-.level-1 { background: linear-gradient(160deg, var(--level-1-a), var(--level-1-b)); color: var(--level-1-text); }
-.level-1 #cardFooter { color: rgba(7,30,42,.72); }
-
-.level-2 { background: linear-gradient(160deg, var(--level-2-a), var(--level-2-b)); color: #fff; }
-
-.level-3 { background: linear-gradient(160deg, var(--level-3-a), var(--level-3-b)); color: var(--level-3-text); }
-.level-3 #cardFooter { color: rgba(59,5,39,.75); }
-
-.level-4 { background: var(--level-4-bg); color: var(--level-4-text); border-color: var(--level-4-border); }
-.level-4 #cardFooter { color: #ff9adf; }
+/* Per-level frame art + text ink/glow colours */
+.level-1 {
+  --ink: #e7fbff;
+  --glow: #37cfff;
+  background-image: url("../assets/cards/front-l1.svg");
+}
+.level-2 {
+  --ink: #ffe8dd;
+  --glow: #ff5a3c;
+  background-image: url("../assets/cards/front-l2.svg");
+}
+.level-3 {
+  --ink: #ffe6f6;
+  --glow: #ff5fcf;
+  background-image: url("../assets/cards/front-l3.svg");
+}
+.level-4 {
+  --ink: #ffd9f6;
+  --glow: #ff4fe3;
+  background-image: url("../assets/cards/front-l4.svg");
+}
