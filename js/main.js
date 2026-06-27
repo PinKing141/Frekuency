@@ -5,7 +5,7 @@ import { drawCard, drawCardForRoom } from './core/cardDrawer.js';
 import { advanceTurn, resetTurn } from './core/turnManager.js';
 import { clearPlayers } from './core/storage.js';
 import { customCards, addCustomCard, removeCustomCard, buildCustomCard } from './core/customCards.js';
-import { click as soundClick, isMuted, toggleMute } from './core/sound.js';
+import { click as soundClick, drink as soundDrink, isMuted, toggleMute } from './core/sound.js';
 import { showScreen } from './ui/screens.js';
 import { renderCard, renderRoomCard } from './ui/renderCard.js';
 import { renderPlayers, renderScores } from './ui/renderPlayers.js';
@@ -26,9 +26,9 @@ import {
   setRoomCustomCards
 } from './firebase/roomService.js';
 
-// ──────────────────────────────────────
+// ──────────────────────
 // State
-// ──────────────────────────────────────
+// ──────────────────────
 
 let mpMode      = false;
 let roomCode    = null;
@@ -47,9 +47,9 @@ const userReady = loginGuest()
   .then(() => waitForUser())
   .catch(err => { console.error('Firebase auth failed:', err); }); // solo still works
 
-// ──────────────────────────────────────
+// ──────────────────────
 // Solo helpers
-// ──────────────────────────────────────
+// ──────────────────────
 
 function refreshPlayers() {
   renderPlayers(state.players, index => {
@@ -97,9 +97,9 @@ function handleNextTurn(scored) {
   handleDrawCard();
 }
 
-// ──────────────────────────────────────
+// ──────────────────────
 // Multiplayer helpers
-// ──────────────────────────────────────
+// ──────────────────────
 
 function onRoomUpdate(room) {
   if (!room) return;
@@ -200,9 +200,9 @@ function cleanupRoom() {
   document.querySelector('#backSetup').textContent = 'Setup';
 }
 
-// ──────────────────────────────────────
+// ──────────────────────
 // Event bindings — solo
-// ──────────────────────────────────────
+// ──────────────────────
 
 document.querySelector('#startSetup').onclick = () => showScreen('setup');
 
@@ -263,6 +263,7 @@ document.querySelector('#didIt').onclick = () => {
 };
 
 document.querySelector('#drink').onclick = () => {
+  soundDrink();
   if (mpMode) handleMpNextTurn(true);
   else handleNextTurn(false);
 };
@@ -276,9 +277,9 @@ document.querySelector('#resetAll').onclick = () => {
   renderScores(state.players);
 };
 
-// ──────────────────────────────────────
+// ──────────────────────
 // Event bindings — multiplayer
-// ──────────────────────────────────────
+// ──────────────────────
 
 document.querySelector('#startMultiplayer').onclick = () => showScreen('lobby');
 document.querySelector('#lobbyBack').onclick        = () => showScreen('start');
@@ -358,9 +359,9 @@ document.querySelector('#leaveRoom').onclick = () => {
   showScreen('start');
 };
 
-// ──────────────────────────────────────
+// ──────────────────────
 // Sound + rules
-// ──────────────────────────────────────
+// ──────────────────────
 
 const muteToggle = document.querySelector('#muteToggle');
 function syncMuteUI() {
@@ -374,7 +375,7 @@ syncMuteUI();
 // Subtle click on every button press (respects mute).
 document.addEventListener('click', e => {
   const btn = e.target.closest('button');
-  if (btn && btn.id !== 'muteToggle') soundClick();
+  if (btn && btn.id !== 'muteToggle' && btn.id !== 'drink') soundClick();
 });
 
 const rules = document.querySelector('#rulesModal');
@@ -386,9 +387,9 @@ document.querySelector('#closeRules2').onclick = closeRules;
 rules.addEventListener('click', e => { if (e.target === rules) closeRules(); });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeRules(); });
 
-// ──────────────────────────────────────
+// ──────────────────────
 // Init
-// ──────────────────────────────────────
+// ──────────────────────
 
 refreshPlayers();
 renderScores(state.players);
