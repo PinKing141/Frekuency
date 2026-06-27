@@ -1,19 +1,11 @@
 import { state } from './gameState.js';
 import { cards } from '../data/cards.js';
+import { randomTargetPhrase } from '../utils/helpers.js';
 
 // --- Solo mode helpers (read settings from DOM) ---
 
 function selectedLevels() {
   return [...document.querySelectorAll('.levelCheck:checked')].map(c => Number(c.value));
-}
-
-function getTarget(current, card) {
-  if (!card.tags.includes('target') || !document.querySelector('#allowTarget').checked) return null;
-  let pool = state.players.filter(p => p.id !== current.id);
-  if (card.tags.includes('flirt'))   pool = pool.filter(p => p.flirt);
-  if (card.tags.includes('contact')) pool = pool.filter(p => p.contact);
-  if (pool.length === 0) return null;
-  return pool[Math.floor(Math.random() * pool.length)];
 }
 
 function cardAllowed(card, current) {
@@ -42,10 +34,9 @@ export function drawCard() {
   state.usedCards.push(card.id);
   if (state.usedCards.length > Math.min(cards.length, 25)) state.usedCards.shift();
 
-  const target = getTarget(current, card);
   const text = card.text
     .replaceAll('{player}', current.name)
-    .replaceAll('{target}', target ? target.name : 'another opted-in player');
+    .replaceAll('{target}', randomTargetPhrase());
 
   state.currentCard = card;
   return { card, text, current };
@@ -75,15 +66,9 @@ export function drawCardForRoom(room) {
     attempts++;
   }
 
-  let target = null;
-  if (card.tags.includes('target') && settings.allowTargetedCards) {
-    const pool = players.filter(p => p.id !== current.id);
-    if (pool.length > 0) target = pool[Math.floor(Math.random() * pool.length)];
-  }
-
   const resolvedText = card.text
     .replaceAll('{player}', current.name)
-    .replaceAll('{target}', target ? target.name : 'another player');
+    .replaceAll('{target}', randomTargetPhrase());
 
   return {
     id: card.id,

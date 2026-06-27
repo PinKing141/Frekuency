@@ -22,25 +22,30 @@ import {
   markPlayerDrink
 } from './firebase/roomService.js';
 
-// ─────────────────────────────────────────────
+// ────────────────────────────────────────
 // State
-// ─────────────────────────────────────────────
+// ────────────────────────────────────────
 
 let mpMode      = false;
 let roomCode    = null;
 let roomData    = null;
-let currentUser = null;
+let myPlayerId  = null;   // unique per participant, independent of the shared anon auth uid
 let unsubRoom   = null;
 
-// Start anonymous sign-in immediately (non-blocking)
+function newId() {
+  return crypto.randomUUID ? crypto.randomUUID() : String(Date.now() + Math.random());
+}
+
+// Anonymous sign-in only satisfies Firestore security rules (request.auth != null).
+// Player identity uses myPlayerId, NOT the auth uid — two people in the same browser
+// share an anon uid, which previously made the second join collide with the first.
 const userReady = loginGuest()
   .then(() => waitForUser())
-  .then(u => { currentUser = u; })
-  .catch(() => {}); // Firebase unavailable — solo still works
+  .catch(err => { console.error('Firebase auth failed:', err); }); // solo still works
 
-// ─────────────────────────────────────────────
+// ────────────────────────────────────────
 // Solo helpers
-// ─────────────────────────────────────────────
+// ────────────────────────────────────────
 
 function refreshPlayers() {
   renderPlayers(state.players, index => {
@@ -64,9 +69,9 @@ function handleNextTurn(scored) {
   handleDrawCard();
 }
 
-// ─────────────────────────────────────────────
+// ────────────────────────────────────────
 // Multiplayer helpers
-// ─────────────────────────────────────────────
+// ────────────────────────────────────────
 
 function onRoomUpdate(room) {
   if (!room) return;
@@ -101,7 +106,7 @@ function updateWaitingScreen(room) {
     list.appendChild(li);
   });
 
-  const isHost = currentUser && room.hostId === currentUser.uid;
+  const isHost = room.hostId === myPlayerId;
   document.querySelector('#startMultiGame').style.display  = isHost ? 'block' : 'none';
   document.querySelector('#waitingForHost').style.display  = isHost ? 'none'  : 'block';
   document.querySelector('#hostSettings').style.display    = isHost ? 'block' : 'none';
@@ -152,16 +157,17 @@ async function handleMpNextTurn(tookDrink) {
 
 function cleanupRoom() {
   if (unsubRoom) { unsubRoom(); unsubRoom = null; }
-  roomCode = null;
-  roomData = null;
-  mpMode   = false;
+  roomCode   = null;
+  roomData   = null;
+  myPlayerId = null;
+  mpMode     = false;
   document.querySelector('#room-bar').hidden = true;
   document.querySelector('#backSetup').textContent = 'Setup';
 }
 
-// ─────────────────────────────────────────────
+// ────────────────────────────────────────
 // Event bindings — solo
-// ─────────────────────────────────────────────
+// ────────────────────────────────────────
 
 document.querySelector('#startSetup').onclick = () => showScreen('setup');
 
@@ -222,9 +228,9 @@ document.querySelector('#resetAll').onclick = () => {
   renderScores(state.players);
 };
 
-// ─────────────────────────────────────────────
+// ────────────────────────────────────────
 // Event bindings — multiplayer
-// ─────────────────────────────────────────────
+// ────────────────────────────────────────
 
 document.querySelector('#startMultiplayer').onclick = () => showScreen('lobby');
 document.querySelector('#lobbyBack').onclick        = () => showScreen('start');
@@ -234,14 +240,16 @@ document.querySelector('#createRoomBtn').onclick = async () => {
   if (!name) return alert('Enter your name first.');
   try {
     await userReady;
-    const code = await createRoom(name, document.querySelector('#hostGender').value);
+    myPlayerId = newId();
+    const code = await createRoom(name, document.querySelector('#hostGender').value, myPlayerId);
     roomCode = code;
     unsubRoom = listenToRoom(code, onRoomUpdate);
     document.querySelector('#waitingRoomCode').textContent = code;
     document.querySelector('#roomCodeDisplay').textContent = code;
     showScreen('waiting');
   } catch (err) {
-    alert(err.message || 'Could not create room. Check your connection.');
+    console.error('Create room failed:', err);
+    alert(err.message || 'Could not create room. Check your connection and Firestore rules.');
   }
 };
 
@@ -252,16 +260,18 @@ document.querySelector('#joinRoomBtn').onclick = async () => {
   if (!name || !code) return alert('Enter your name and the room code.');
   try {
     await userReady;
-    roomCode = await joinRoom(code, name, gender);
+    myPlayerId = newId();
+    roomCode = await joinRoom(code, name, gender, myPlayerId);
     unsubRoom = listenToRoom(roomCode, onRoomUpdate);
     showScreen('waiting');
   } catch (err) {
+    console.error('Join room failed:', err);
     alert(err.message || 'Could not join room. Check the code and try again.');
   }
 };
 
 document.querySelector('#startMultiGame').onclick = async () => {
-  if (!roomData || !currentUser || roomData.hostId !== currentUser.uid) return;
+  if (!roomData || roomData.hostId !== myPlayerId) return;
   if (roomData.players.length < 2) return alert('Need at least 2 players to start.');
 
   // Push host's chosen settings before starting
@@ -285,9 +295,9 @@ document.querySelector('#leaveRoom').onclick = () => {
   showScreen('start');
 };
 
-// ─────────────────────────────────────────────
+// ────────────────────────────────────────
 // Init
-// ─────────────────────────────────────────────
+// ────────────────────────────────────────
 
 refreshPlayers();
 renderScores(state.players);

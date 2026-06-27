@@ -8,7 +8,7 @@ import {
   arrayUnion
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
-import { db, auth } from "./firebaseConfig.js";
+import { db } from "./firebaseConfig.js";
 
 function makeRoomCode() {
   const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
@@ -17,13 +17,13 @@ function makeRoomCode() {
   return code;
 }
 
-export async function createRoom(hostName, gender) {
+export async function createRoom(hostName, gender, playerId) {
   const code = makeRoomCode();
   const roomRef = doc(db, "rooms", code);
 
   await setDoc(roomRef, {
     code,
-    hostId: auth.currentUser.uid,
+    hostId: playerId,
     status: "waiting",
     createdAt: serverTimestamp(),
     currentPlayerIndex: 0,
@@ -35,7 +35,7 @@ export async function createRoom(hostName, gender) {
       allowPhysicalCards: false
     },
     players: [{
-      id: auth.currentUser.uid,
+      id: playerId,
       name: hostName,
       gender: gender || "any",
       drinksTaken: 0,
@@ -46,7 +46,7 @@ export async function createRoom(hostName, gender) {
   return code;
 }
 
-export async function joinRoom(code, playerName, gender) {
+export async function joinRoom(code, playerName, gender, playerId) {
   const clean = code.trim().toUpperCase();
   const roomRef = doc(db, "rooms", clean);
   const snap = await getDoc(roomRef);
@@ -56,11 +56,11 @@ export async function joinRoom(code, playerName, gender) {
   const room = snap.data();
   if (room.status === "playing") throw new Error("That game has already started.");
 
-  const alreadyIn = room.players.some(p => p.id === auth.currentUser.uid);
+  const alreadyIn = room.players.some(p => p.id === playerId);
   if (!alreadyIn) {
     await updateDoc(roomRef, {
       players: arrayUnion({
-        id: auth.currentUser.uid,
+        id: playerId,
         name: playerName,
         gender: gender || "any",
         drinksTaken: 0,
