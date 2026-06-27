@@ -9,7 +9,7 @@
 <body>
   <main class="app-shell">
 
-    <!-- ── Start screen ── -->
+    <!-- Start screen -->
     <section id="screen-start" class="screen active">
       <div class="hero-card">
         <p class="eyebrow">Freak or Drink</p>
@@ -26,7 +26,7 @@
       </div>
     </section>
 
-    <!-- ── Solo setup screen ── -->
+    <!-- Solo setup screen -->
     <section id="screen-setup" class="screen">
       <header class="topbar">
         <h2>Setup</h2>
@@ -92,7 +92,7 @@
       <button id="beginGame" class="primary-btn wide">Begin</button>
     </section>
 
-    <!-- ── Multiplayer lobby screen ── -->
+    <!-- Multiplayer lobby screen -->
     <section id="screen-lobby" class="screen">
       <header class="topbar">
         <button id="lobbyBack" class="ghost-btn">← Back</button>
@@ -148,7 +148,7 @@
       </div>
     </section>
 
-    <!-- ── Waiting / lobby room screen ── -->
+    <!-- Waiting / lobby room screen -->
     <section id="screen-waiting" class="screen">
       <div class="panel" style="text-align:center; margin-top:10vh">
         <p class="eyebrow">Room Code</p>
@@ -184,7 +184,7 @@
       <button id="leaveRoom" class="ghost-btn wide" style="margin-top:10px">Leave Room</button>
     </section>
 
-    <!-- ── Game screen (solo + multiplayer) ── -->
+    <!-- Game screen (solo + multiplayer) -->
     <section id="screen-game" class="screen">
       <header class="game-header">
         <button id="backSetup" class="ghost-btn">Setup</button>
@@ -201,15 +201,19 @@
         <span id="onlineCount"></span>
       </div>
 
-      <article id="card" class="card level-1">
-        <div class="card-meta">
-          <span id="cardLevel">L1</span>
-          <span id="cardType">Icebreaker</span>
-        </div>
-        <div id="cardIcon" class="card-icon">🧊</div>
-        <p id="cardText">Press New Card to start.</p>
-        <p id="cardFooter">Do it, answer honestly, or drink/pass.</p>
-      </article>
+      <div class="card-scene">
+        <article id="card" class="card level-1">
+          <div class="card-meta">
+            <span id="cardLevel">L1</span>
+            <span id="cardType">Icebreaker</span>
+          </div>
+          <div class="card-body">
+            <div id="cardIcon" class="card-icon">🧊</div>
+            <p id="cardText">Press New Card to start.</p>
+          </div>
+          <p id="cardFooter">Do it, answer honestly, or drink/pass.</p>
+        </article>
+      </div>
 
       <div class="game-actions">
         <button id="didIt" class="secondary-btn">Did it / Answered</button>
