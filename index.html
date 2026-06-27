@@ -29,6 +29,7 @@
         <div class="hero-actions">
           <button id="startSetup" class="primary-btn wide">Solo / Pass the Phone</button>
           <button id="startMultiplayer" class="secondary-btn wide">Multiplayer</button>
+          <button id="openRules" class="ghost-btn wide">How to play</button>
         </div>
       </div>
     </section>
@@ -277,6 +278,39 @@
     </section>
 
   </main>
+
+  <!-- Floating mute toggle -->
+  <button id="muteToggle" class="mute-toggle" aria-label="Toggle sound" title="Toggle sound">🔊</button>
+
+  <!-- How-to-play modal -->
+  <div id="rulesModal" class="modal" role="dialog" aria-modal="true" aria-label="How to play">
+    <div class="modal-card panel">
+      <button id="closeRules" class="ghost-btn modal-close" aria-label="Close">✕</button>
+      <h2>How to play</h2>
+
+      <p>Add players (or join a room), then draw cards. On your turn: read the card aloud and either <strong>do it / answer honestly</strong>, or take the <strong>Drink / Pass</strong> option. Then it's the next player.</p>
+
+      <h3>The levels</h3>
+      <ul class="rules-list">
+        <li><span class="lvl l1">L1</span> Icebreaker — light, funny warm-ups.</li>
+        <li><span class="lvl l2">L2</span> Spicy — flirty and bold, still tame.</li>
+        <li><span class="lvl l3">L3</span> Freaky — adults only, consent-first dares.</li>
+        <li><span class="lvl l4">L4</span> OMG — high chaos. Adults who clearly opted in.</li>
+      </ul>
+
+      <h3>Modes</h3>
+      <p><strong>Solo / Pass the Phone</strong> — one device, pass it around the circle.</p>
+      <p><strong>Multiplayer</strong> — one person creates a room; everyone else joins with the code and every phone stays in sync.</p>
+
+      <h3>Make it yours</h3>
+      <p>Add your own <strong>custom cards</strong> in setup (or in the room, if you're the host), pick which levels are in play, and use the safety toggles to keep things comfortable.</p>
+
+      <h3>Safety first</h3>
+      <p>Consent always wins. You can pass or skip anything — no one is ever forced. Keep L3/L4 to adults who opted in, and please drink responsibly (the game works just as well with a soft drink).</p>
+
+      <button id="closeRules2" class="primary-btn wide" style="margin-top:18px">Got it</button>
+    </div>
+  </div>
 
   <script type="module" src="js/main.js"></script>
 </body>

@@ -5,6 +5,7 @@ import { drawCard, drawCardForRoom } from './core/cardDrawer.js';
 import { advanceTurn, resetTurn } from './core/turnManager.js';
 import { clearPlayers } from './core/storage.js';
 import { customCards, addCustomCard, removeCustomCard, buildCustomCard } from './core/customCards.js';
+import { click as soundClick, isMuted, toggleMute } from './core/sound.js';
 import { showScreen } from './ui/screens.js';
 import { renderCard, renderRoomCard } from './ui/renderCard.js';
 import { renderPlayers, renderScores } from './ui/renderPlayers.js';
@@ -356,6 +357,34 @@ document.querySelector('#leaveRoom').onclick = () => {
   cleanupRoom();
   showScreen('start');
 };
+
+// ──────────────────────────────────────
+// Sound + rules
+// ──────────────────────────────────────
+
+const muteToggle = document.querySelector('#muteToggle');
+function syncMuteUI() {
+  const m = isMuted();
+  muteToggle.textContent = m ? '🔇' : '🔊';
+  muteToggle.classList.toggle('muted', m);
+}
+muteToggle.onclick = () => { toggleMute(); syncMuteUI(); };
+syncMuteUI();
+
+// Subtle click on every button press (respects mute).
+document.addEventListener('click', e => {
+  const btn = e.target.closest('button');
+  if (btn && btn.id !== 'muteToggle') soundClick();
+});
+
+const rules = document.querySelector('#rulesModal');
+const openRules  = () => rules.classList.add('open');
+const closeRules = () => rules.classList.remove('open');
+document.querySelector('#openRules').onclick   = openRules;
+document.querySelector('#closeRules').onclick  = closeRules;
+document.querySelector('#closeRules2').onclick = closeRules;
+rules.addEventListener('click', e => { if (e.target === rules) closeRules(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeRules(); });
 
 // ──────────────────────────────────────
 // Init
