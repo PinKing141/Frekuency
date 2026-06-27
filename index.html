@@ -4,6 +4,16 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Freakquency | Freak or Drink</title>
+  <meta name="description" content="Freakquency — a neon party card game for messy friends, brave answers, and safe chaos. Play on one phone or sync across many." />
+  <meta name="theme-color" content="#0a0410" />
+
+  <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg" />
+  <link rel="apple-touch-icon" href="assets/icons/favicon.svg" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet" />
+
   <link rel="stylesheet" href="css/main.css" />
 </head>
 <body>
@@ -11,18 +21,21 @@
 
     <!-- Start screen -->
     <section id="screen-start" class="screen active">
-      <div class="hero-card">
+      <div class="hero">
+        <div class="hero-deck" aria-hidden="true"></div>
         <p class="eyebrow">Freak or Drink</p>
         <h1>Freakquency</h1>
-        <p class="tagline">A party card game for messy friends, brave answers, and safe chaos.</p>
+        <p class="tagline">A neon party card game for messy friends, brave answers, and safe chaos.</p>
         <div class="name-row">
           <span>L1 Icebreaker</span>
           <span>L2 Spicy</span>
           <span>L3 Freaky</span>
           <span>L4 OMG</span>
         </div>
-        <button id="startSetup" class="primary-btn wide">Solo / Pass the Phone</button>
-        <button id="startMultiplayer" class="secondary-btn wide" style="margin-top:10px">Multiplayer</button>
+        <div class="hero-actions">
+          <button id="startSetup" class="primary-btn wide">Solo / Pass the Phone</button>
+          <button id="startMultiplayer" class="secondary-btn wide">Multiplayer</button>
+        </div>
       </div>
     </section>
 
@@ -64,7 +77,7 @@
             </select>
           </label>
         </div>
-        <button id="addPlayer" class="secondary-btn">Add Player</button>
+        <button id="addPlayer" class="secondary-btn wide">Add Player</button>
         <ul id="playerList" class="player-list"></ul>
       </div>
 
@@ -150,10 +163,10 @@
 
     <!-- Waiting / lobby room screen -->
     <section id="screen-waiting" class="screen">
-      <div class="panel" style="text-align:center; margin-top:10vh">
+      <div class="panel" style="text-align:center; margin-top:6vh">
         <p class="eyebrow">Room Code</p>
         <p id="waitingRoomCode" class="room-code-display">-----</p>
-        <p class="tagline">Share this code with your friends.</p>
+        <p class="tagline" style="margin:0 auto">Share this code with your friends.</p>
       </div>
 
       <div class="panel">
@@ -164,7 +177,7 @@
       <!-- Host only settings -->
       <div id="hostSettings" class="panel" style="display:none">
         <h3>Game settings</h3>
-        <label style="margin-bottom:10px">
+        <label style="margin-bottom:14px">
           Max card level
           <select id="mpMaxLevel">
             <option value="1">L1 Icebreaker only</option>
@@ -180,8 +193,8 @@
       </div>
 
       <button id="startMultiGame" class="primary-btn wide" style="display:none">Start Game</button>
-      <p id="waitingForHost" class="muted-center" style="display:none">Waiting for the host to start...</p>
-      <button id="leaveRoom" class="ghost-btn wide" style="margin-top:10px">Leave Room</button>
+      <p id="waitingForHost" class="muted-center" style="display:none">Waiting for the host to start…</p>
+      <button id="leaveRoom" class="ghost-btn wide" style="margin-top:12px">Leave Room</button>
     </section>
 
     <!-- Game screen (solo + multiplayer) -->
@@ -202,17 +215,20 @@
       </div>
 
       <div class="card-scene">
-        <article id="card" class="card level-1">
-          <div class="card-meta">
-            <span id="cardLevel">L1</span>
-            <span id="cardType">Icebreaker</span>
-          </div>
-          <div class="card-body">
-            <div id="cardIcon" class="card-icon">🧊</div>
-            <p id="cardText">Press New Card to start.</p>
-          </div>
-          <p id="cardFooter">Do it, answer honestly, or drink/pass.</p>
-        </article>
+        <div id="card" class="card level-1">
+          <div class="card-face card-back" aria-hidden="true"></div>
+          <article class="card-face card-front">
+            <div class="card-meta">
+              <span id="cardLevel">L1</span>
+              <span id="cardType">Icebreaker</span>
+            </div>
+            <div class="card-body">
+              <div id="cardIcon" class="card-icon">🧊</div>
+              <p id="cardText">Press New Card to start.</p>
+            </div>
+            <p id="cardFooter">Do it, answer honestly, or drink/pass.</p>
+          </article>
+        </div>
       </div>
 
       <div class="game-actions">

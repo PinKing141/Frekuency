@@ -1,11 +1,34 @@
-.card { transition: transform .18s ease; }
-.card:active { transform: scale(.99); }
-
-@keyframes card-in {
-  from { opacity: 0; transform: translateY(12px) scale(.97); }
-  to   { opacity: 1; transform: translateY(0) scale(1); }
+@keyframes bg-pan {
+  0%   { transform: translate3d(-2%, -1%, 0) scale(1.05); }
+  100% { transform: translate3d(2%, 1%, 0) scale(1.12); }
 }
 
-.card.animate-in {
-  animation: card-in .22s ease forwards;
+@keyframes screen-in {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes row-in {
+  from { opacity: 0; transform: translateX(-8px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes float {
+  0%, 100% { transform: rotate(-6deg) translateY(0); }
+  50%      { transform: rotate(-4deg) translateY(-10px); }
+}
+
+/* Subtle pulse used for the room code while waiting */
+@keyframes pulse-glow {
+  0%, 100% { filter: drop-shadow(0 0 18px rgba(95, 224, 255, 0.4)); }
+  50%      { filter: drop-shadow(0 0 30px rgba(95, 224, 255, 0.8)); }
+}
+.room-code-display { animation: pulse-glow 2.6s ease-in-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
 }

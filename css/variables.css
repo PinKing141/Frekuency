@@ -1,23 +1,40 @@
 :root {
-  --bg: #120914;
-  --panel: #221025;
-  --text: #fff4ff;
-  --muted: #d7badb;
-  --accent: #ff4fc3;
-  --accent-2: #7bdcff;
-  --danger: #ff3f5f;
-  --radius: 24px;
-  --shadow: 0 20px 50px rgba(0,0,0,.35);
+  /* Base surface palette */
+  --bg-0: #07040b;
+  --bg-1: #120a1c;
+  --bg-2: #1b0f2b;
+  --text: #fdf2ff;
+  --muted: #c5a8d8;
+  --faint: #8d77a6;
 
-  --level-1-a: #b7efff;
-  --level-1-b: #5fc5ee;
-  --level-1-text: #071e2a;
-  --level-2-a: #ff314f;
-  --level-2-b: #94121f;
-  --level-3-a: #ff90cf;
-  --level-3-b: #ff4bb3;
-  --level-3-text: #3b0527;
-  --level-4-bg: #050005;
-  --level-4-text: #ff4fc3;
-  --level-4-border: #ff4fc3;
+  /* Brand neon */
+  --accent: #ff4fe3;
+  --accent-2: #b56bff;
+  --cyan: #5fe0ff;
+  --danger: #ff3b6b;
+  --gold: #ffd36b;
+
+  /* Glass surfaces */
+  --glass: rgba(255, 255, 255, 0.045);
+  --glass-strong: rgba(255, 255, 255, 0.07);
+  --stroke: rgba(255, 255, 255, 0.12);
+  --stroke-soft: rgba(255, 255, 255, 0.07);
+
+  --radius: 22px;
+  --radius-lg: 30px;
+  --radius-pill: 999px;
+
+  --shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
+  --shadow-glow: 0 0 40px -10px var(--accent);
+
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+
+  --font-body: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: "Orbitron", var(--font-body);
+
+  /* Per-level accent colours (used by chips, cards, glows) */
+  --l1: #57c9ff;
+  --l2: #ff5a3c;
+  --l3: #ff5fc0;
+  --l4: #ff4fe3;
 }
