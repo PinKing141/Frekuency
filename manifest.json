@@ -1,0 +1,19 @@
+{
+  "name": "Freakquency — Freak or Drink",
+  "short_name": "Freakquency",
+  "description": "A neon party card game for messy friends, brave answers, and safe chaos.",
+  "start_url": ".",
+  "scope": ".",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#07040b",
+  "theme_color": "#0a0410",
+  "icons": [
+    {
+      "src": "assets/icons/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
