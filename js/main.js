@@ -5,6 +5,8 @@ import { drawCard, drawCardForRoom, killCard, reshuffleCurrent } from './core/ca
 import { advanceTurn, resetTurn } from './core/turnManager.js';
 import { clearPlayers } from './core/storage.js';
 import { customCards, addCustomCard, removeCustomCard, buildCustomCard } from './core/customCards.js';
+import { settings, saveSettings } from './core/settings.js';
+import { categories, addCategory, removeCategory, categoryName } from './core/categories.js';
 import { click as soundClick, drink as soundDrink, buzz as soundBuzz, flip as soundFlip, isMuted, toggleMute } from './core/sound.js';
 import { showScreen } from './ui/screens.js';
 import { setupDebug } from './ui/debug.js';
@@ -84,6 +86,8 @@ function renderCardList(ul, list, onRemove) {
 }
 
 function refreshCustomCards() {
+  const count = document.querySelector('#customCount');
+  if (count) count.textContent = customCards.length;
   renderCardList(document.querySelector('#customList'), customCards, c => {
     removeCustomCard(c.id);
     refreshCustomCards();
@@ -91,8 +95,101 @@ function refreshCustomCards() {
 }
 
 function soloTimerSeconds() {
-  return Number(document.querySelector('#timerSeconds').value) || 0;
+  return Number(settings.timerSeconds) || 0;
 }
+
+// --- Categories (custom card groups) ---
+
+// Fill the "Category" dropdown on the Custom Cards screen.
+function renderCategoryOptions() {
+  const sel = document.querySelector('#customCategory');
+  if (!sel) return;
+  const current = sel.value;
+  sel.innerHTML = '<option value="">None (Custom)</option>' +
+    categories.map(c => `<option value="${c.id}">${escapeHtml(c.name)}</option>`).join('');
+  if ([...sel.options].some(o => o.value === current)) sel.value = current;
+}
+
+// List of categories with a remove button (on the Custom Cards screen).
+function renderCategoryList() {
+  const ul = document.querySelector('#categoryList');
+  if (!ul) return;
+  ul.innerHTML = '';
+  categories.forEach(cat => {
+    const li = document.createElement('li');
+    const span = document.createElement('span');
+    span.textContent = cat.name;
+    const btn = document.createElement('button');
+    btn.className = 'remove-player';
+    btn.textContent = 'Remove';
+    btn.onclick = () => {
+      removeCategory(cat.id);
+      refreshCategories();
+    };
+    li.appendChild(span);
+    li.appendChild(btn);
+    ul.appendChild(li);
+  });
+}
+
+function refreshCategories() {
+  renderCategoryOptions();
+  renderCategoryList();
+  renderSettingsCategories();
+}
+
+// --- Game settings modal ---
+
+const settingsModal = document.querySelector('#settingsModal');
+
+// Render the per-custom-category on/off toggles inside Game settings.
+function renderSettingsCategories() {
+  const wrap = document.querySelector('#settingsCategories');
+  const note = document.querySelector('#noCategoriesNote');
+  if (!wrap) return;
+  wrap.innerHTML = '';
+  categories.forEach(cat => {
+    const label = document.createElement('label');
+    const cb = document.createElement('input');
+    cb.type = 'checkbox';
+    cb.checked = settings.categories[cat.id] !== false;
+    cb.onchange = () => { settings.categories[cat.id] = cb.checked; saveSettings(); };
+    label.appendChild(cb);
+    label.appendChild(document.createTextNode(' ' + cat.name));
+    wrap.appendChild(label);
+  });
+  if (note) note.hidden = categories.length > 0;
+}
+
+// Mirror the persisted settings into the modal's checkboxes + selects, and wire
+// each control to write straight back to settings (single source of truth).
+function initSettingsUI() {
+  document.querySelectorAll('#settingsModal .levelCheck').forEach(cb => {
+    const lvl = Number(cb.value);
+    cb.checked = settings.levels[lvl] !== false;
+    cb.onchange = () => { settings.levels[lvl] = cb.checked; saveSettings(); };
+  });
+  const toggle = (id, key) => {
+    const el = document.querySelector('#' + id);
+    if (!el) return;
+    el.checked = settings[key] !== false;
+    el.onchange = () => { settings[key] = el.checked; saveSettings(); };
+  };
+  toggle('allowContact', 'allowContact');
+  toggle('allowTarget',  'allowTarget');
+  toggle('allowNever',   'allowNever');
+  toggle('allowWould',   'allowWould');
+
+  const timer = document.querySelector('#timerSeconds');
+  if (timer) {
+    timer.value = String(settings.timerSeconds || 0);
+    timer.onchange = () => { settings.timerSeconds = Number(timer.value) || 0; saveSettings(); };
+  }
+  renderSettingsCategories();
+}
+
+function openSettings()  { settingsModal.classList.add('open'); }
+function closeSettings() { settingsModal.classList.remove('open'); }
 
 // Reflect the face-down dead pile (count + visibility) on the game screen.
 function refreshDeadPile() {
@@ -287,7 +384,13 @@ document.querySelector('#addCustomCard').onclick = () => {
   const input = document.querySelector('#customText');
   const text = input.value.trim();
   if (!text) return alert('Type a prompt first.');
-  addCustomCard({ text, level: document.querySelector('#customLevel').value });
+  const catId = document.querySelector('#customCategory').value || null;
+  addCustomCard({
+    text,
+    level: document.querySelector('#customLevel').value,
+    categoryId: catId,
+    categoryName: catId ? categoryName(catId) : null
+  });
   input.value = '';
   refreshCustomCards();
 };
@@ -295,6 +398,31 @@ document.querySelector('#addCustomCard').onclick = () => {
 document.querySelector('#customText').addEventListener('keydown', e => {
   if (e.key === 'Enter') document.querySelector('#addCustomCard').click();
 });
+
+document.querySelector('#addCategory').onclick = () => {
+  const input = document.querySelector('#newCategoryName');
+  const name = input.value.trim();
+  if (!name) return alert('Name your category first.');
+  const cat = addCategory(name);
+  input.value = '';
+  refreshCategories();
+  if (cat) document.querySelector('#customCategory').value = cat.id;
+};
+
+document.querySelector('#newCategoryName').addEventListener('keydown', e => {
+  if (e.key === 'Enter') document.querySelector('#addCategory').click();
+});
+
+document.querySelector('#customBack').onclick = () => showScreen('start');
+
+// Settings + Custom-cards openers (multiple entry points share a class)
+document.querySelectorAll('.js-open-settings').forEach(b => b.addEventListener('click', openSettings));
+document.querySelectorAll('.js-open-custom').forEach(b => b.addEventListener('click', () => showScreen('custom')));
+document.querySelectorAll('.js-open-rules').forEach(b => b.addEventListener('click', () => document.querySelector('#rulesModal').classList.add('open')));
+
+document.querySelector('#closeSettings').onclick = closeSettings;
+document.querySelector('#settingsDone').onclick  = closeSettings;
+settingsModal.addEventListener('click', e => { if (e.target === settingsModal) closeSettings(); });
 
 document.querySelector('#beginGame').onclick = () => {
   if (state.players.length < 2) return alert('Add at least 2 players.');
@@ -447,13 +575,36 @@ document.addEventListener('click', e => {
 });
 
 const rules = document.querySelector('#rulesModal');
-const openRules  = () => rules.classList.add('open');
 const closeRules = () => rules.classList.remove('open');
-document.querySelector('#openRules').onclick   = openRules;
 document.querySelector('#closeRules').onclick  = closeRules;
 document.querySelector('#closeRules2').onclick = closeRules;
 rules.addEventListener('click', e => { if (e.target === rules) closeRules(); });
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeRules(); });
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Escape') return;
+  closeRules();
+  closeSettings();
+});
+
+// ──────────────────────
+// 18+ gate — shown once, remembered in localStorage
+// ──────────────────────
+
+const AGE_KEY = 'freakquencyAgeOk';
+const ageModal = document.querySelector('#ageModal');
+if (localStorage.getItem(AGE_KEY) !== '1') {
+  ageModal.hidden = false;
+  ageModal.classList.add('open');
+}
+document.querySelector('#ageConfirm').onclick = () => {
+  localStorage.setItem(AGE_KEY, '1');
+  ageModal.classList.remove('open');
+  ageModal.hidden = true;
+};
+document.querySelector('#ageLeave').onclick = () => {
+  document.body.innerHTML =
+    '<div style="min-height:100dvh;display:grid;place-items:center;padding:32px;text-align:center;color:#c5a8d8;font-family:Inter,sans-serif">' +
+    'Come back when everyone playing is 18+. 👋</div>';
+};
 
 // ──────────────────────
 // Init
@@ -462,6 +613,8 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeRules()
 refreshPlayers();
 renderScores(state.players);
 refreshCustomCards();
+refreshCategories();
+initSettingsUI();
 refreshDeadPile();
 setupDebug({ getRoomCustomCards: () => (roomData && roomData.customCards) || [] });
 

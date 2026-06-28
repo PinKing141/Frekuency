@@ -56,8 +56,31 @@ button { cursor: pointer; border: 0; }
   min-height: 0;
   animation: screen-in 0.45s var(--ease) both;
 }
-#screen-setup, #screen-lobby, #screen-waiting { overflow-y: auto; }
+#screen-setup, #screen-custom, #screen-lobby, #screen-waiting { overflow-y: auto; }
 #screen-start.active { justify-content: center; }
+
+/* Secondary actions under the hero buttons */
+.hero-sub { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-top: 2px; }
+.hero-sub .ghost-btn { flex: 1 1 auto; }
+
+/* Grouped buttons on the right of a topbar */
+.topbar-actions { display: flex; gap: 8px; }
+
+/* Inline "field + button" row (e.g. add a category) */
+.inline-add { display: flex; gap: 10px; align-items: center; }
+.inline-add input { flex: 1; }
+.inline-add .secondary-btn { flex: 0 0 auto; padding: 13px 18px; }
+
+/* Inline text button that looks like a link (used in body copy) */
+.linklike {
+  background: none;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  color: var(--cyan);
+  text-decoration: underline;
+  cursor: pointer;
+}
 
 /* Glass surfaces */
 .panel {

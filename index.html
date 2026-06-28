@@ -30,7 +30,11 @@
         <div class="hero-actions">
           <button id="startSetup" class="primary-btn wide">Solo / Pass the Phone</button>
           <button id="startMultiplayer" class="secondary-btn wide">Multiplayer</button>
-          <button id="openRules" class="ghost-btn wide">How to play</button>
+          <div class="hero-sub">
+            <button class="ghost-btn js-open-rules">How to play</button>
+            <button class="ghost-btn js-open-custom">Custom Cards</button>
+            <button class="ghost-btn js-open-settings">⚙ Game settings</button>
+          </div>
         </div>
       </div>
     </section>
@@ -40,7 +44,10 @@
       <header class="topbar">
         <button id="setupBack" class="ghost-btn back-btn" aria-label="Back">←</button>
         <h2>Setup</h2>
-        <button id="resetAll" class="ghost-btn">Reset</button>
+        <div class="topbar-actions">
+          <button class="ghost-btn js-open-settings" aria-label="Game settings" title="Game settings">⚙</button>
+          <button id="resetAll" class="ghost-btn">Reset</button>
+        </div>
       </header>
 
       <div class="panel">
@@ -78,57 +85,63 @@
         <ul id="playerList" class="player-list"></ul>
       </div>
 
-      <div class="panel">
-        <h3>Card levels</h3>
-        <p class="muted-center" style="text-align:left; margin:0 0 12px">All levels are on by default — untick any you'd rather skip.</p>
-        <div class="checks">
-          <label><input type="checkbox" class="levelCheck" value="1" checked /> L1 Icebreaker</label>
-          <label><input type="checkbox" class="levelCheck" value="2" checked /> L2 Spicy</label>
-          <label><input type="checkbox" class="levelCheck" value="3" checked /> L3 Freaky</label>
-          <label><input type="checkbox" class="levelCheck" value="4" checked /> L4 OMG</label>
-        </div>
-      </div>
+      <p class="muted-center" style="margin:4px 0 14px">
+        Levels, card types and your timer live in <strong>⚙ Game settings</strong>.
+        Add your own prompts under <button class="linklike js-open-custom">Custom Cards</button>.
+      </p>
+
+      <button id="beginGame" class="primary-btn wide">Begin</button>
+    </section>
+
+    <!-- Custom Cards manager (its own screen — kept out of setup for immersion) -->
+    <section id="screen-custom" class="screen">
+      <header class="topbar">
+        <button id="customBack" class="ghost-btn back-btn" aria-label="Back">←</button>
+        <h2>Custom Cards</h2>
+        <span></span>
+      </header>
 
       <div class="panel">
-        <h3>Safety settings</h3>
-        <div class="checks">
-          <label><input id="allowContact" type="checkbox" checked /> Allow physical-contact cards</label>
-          <label><input id="allowTarget"  type="checkbox" checked /> Allow cards that target another player</label>
-          <label><input id="allowNever"   type="checkbox" checked /> Include Never Have I Ever</label>
-          <label><input id="allowWould"   type="checkbox" checked /> Include Would You Rather</label>
-        </div>
-        <label style="margin-top:14px">
-          Turn timer
-          <select id="timerSeconds">
-            <option value="0">Off</option>
-            <option value="15">15 seconds</option>
-            <option value="20">20 seconds</option>
-            <option value="30">30 seconds</option>
-          </select>
-        </label>
-      </div>
-
-      <div class="panel">
-        <h3>Custom cards</h3>
-        <p class="muted-center" style="text-align:left; margin:0 0 12px">Add your own prompts. Tip: use <strong>{player}</strong> for the current player.</p>
+        <h3>New card</h3>
+        <p class="muted-center" style="text-align:left; margin:0 0 12px">Use <strong>{player}</strong> for the current player and <strong>{target}</strong> for a random other player.</p>
         <label>
           Prompt
           <input id="customText" type="text" maxlength="160" placeholder="e.g. {player}, do your best runway walk" />
         </label>
-        <label style="margin-top:12px">
-          Level
-          <select id="customLevel">
-            <option value="1">L1 Icebreaker</option>
-            <option value="2">L2 Spicy</option>
-            <option value="3">L3 Freaky</option>
-            <option value="4">L4 OMG</option>
-          </select>
-        </label>
+        <div class="form-grid" style="margin-top:12px">
+          <label>
+            Level
+            <select id="customLevel">
+              <option value="1">L1 Icebreaker</option>
+              <option value="2">L2 Spicy</option>
+              <option value="3">L3 Freaky</option>
+              <option value="4">L4 OMG</option>
+            </select>
+          </label>
+          <label>
+            Category
+            <select id="customCategory">
+              <option value="">None (Custom)</option>
+            </select>
+          </label>
+        </div>
         <button id="addCustomCard" class="secondary-btn wide" style="margin-top:12px">Add Card</button>
-        <ul id="customList" class="player-list"></ul>
       </div>
 
-      <button id="beginGame" class="primary-btn wide">Begin</button>
+      <div class="panel">
+        <h3>Categories</h3>
+        <p class="muted-center" style="text-align:left; margin:0 0 12px">Group your cards (e.g. "Inside jokes"). Toggle each one on or off in Game settings.</p>
+        <div class="inline-add">
+          <input id="newCategoryName" type="text" maxlength="24" placeholder="New category name" />
+          <button id="addCategory" class="secondary-btn">Add</button>
+        </div>
+        <ul id="categoryList" class="player-list"></ul>
+      </div>
+
+      <div class="panel">
+        <h3>Your cards (<span id="customCount">0</span>)</h3>
+        <ul id="customList" class="player-list"></ul>
+      </div>
     </section>
 
     <!-- Multiplayer lobby screen -->
@@ -325,6 +338,58 @@
   <!-- Floating mute toggle -->
   <button id="muteToggle" class="mute-toggle" aria-label="Toggle sound" title="Toggle sound">🔊</button>
 
+  <!-- 18+ gate — shown once on first launch -->
+  <div id="ageModal" class="modal" role="dialog" aria-modal="true" aria-label="Age check" hidden>
+    <div class="modal-card panel" style="text-align:center; max-width:440px">
+      <h2>Before you play</h2>
+      <p style="text-align:center">Freakquency is an adults' party game. By continuing you confirm <strong>everyone playing is 18+</strong> and happy to take part. You can pass on anything, any time — no pressure.</p>
+      <button id="ageConfirm" class="primary-btn wide" style="margin-top:14px">I'm 18+ — let's play</button>
+      <button id="ageLeave" class="ghost-btn wide" style="margin-top:10px">Leave</button>
+    </div>
+  </div>
+
+  <!-- Game settings modal -->
+  <div id="settingsModal" class="modal" role="dialog" aria-modal="true" aria-label="Game settings">
+    <div class="modal-card panel">
+      <button id="closeSettings" class="ghost-btn modal-close" aria-label="Close">✕</button>
+      <h2>Game settings</h2>
+      <p style="text-align:left">Everything's on by default — switch off anything you don't want in play.</p>
+
+      <h3>Card levels</h3>
+      <div class="checks">
+        <label><input type="checkbox" class="levelCheck" value="1" /> L1 Icebreaker</label>
+        <label><input type="checkbox" class="levelCheck" value="2" /> L2 Spicy</label>
+        <label><input type="checkbox" class="levelCheck" value="3" /> L3 Freaky</label>
+        <label><input type="checkbox" class="levelCheck" value="4" /> L4 OMG</label>
+      </div>
+
+      <h3>Card types</h3>
+      <div class="checks">
+        <label><input id="allowContact" type="checkbox" /> Physical-contact cards</label>
+        <label><input id="allowTarget"  type="checkbox" /> Cards that target another player</label>
+        <label><input id="allowNever"   type="checkbox" /> Never Have I Ever</label>
+        <label><input id="allowWould"   type="checkbox" /> Would You Rather</label>
+      </div>
+
+      <h3>Your categories</h3>
+      <div id="settingsCategories" class="checks"></div>
+      <p id="noCategoriesNote" class="muted-center" style="text-align:left; margin:4px 0 0">No custom categories yet — make some under Custom Cards.</p>
+
+      <h3>Turn timer</h3>
+      <label>
+        Answer within…
+        <select id="timerSeconds">
+          <option value="0">Off</option>
+          <option value="15">15 seconds</option>
+          <option value="20">20 seconds</option>
+          <option value="30">30 seconds</option>
+        </select>
+      </label>
+
+      <button id="settingsDone" class="primary-btn wide" style="margin-top:18px">Done</button>
+    </div>
+  </div>
+
   <!-- Hidden card debug (unlocked by code) -->
   <button id="debugBtn" class="debug-toggle" hidden aria-label="Card debug" title="Card debug">🐞</button>
 
@@ -359,7 +424,7 @@
       <p><strong>Multiplayer</strong> — one person creates a room; everyone else joins with the code and every phone stays in sync.</p>
 
       <h3>Make it yours</h3>
-      <p>All levels are on by default — untick any you'd rather skip. Add your own <strong>custom cards</strong> in setup (or in the room, if you're the host).</p>
+      <p>Everything's on by default — switch off anything you'd rather skip in <strong>⚙ Game settings</strong>. Write your own prompts and group them into categories under <strong>Custom Cards</strong>.</p>
 
       <h3>One rule</h3>
       <p>If you don't want to do a card, just take the <strong>Drink / Pass</strong> and move on — no big deal. Drink responsibly (works just as well with a soft drink).</p>
