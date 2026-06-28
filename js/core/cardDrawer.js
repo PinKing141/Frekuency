@@ -11,6 +11,7 @@ function selectedLevels() {
 
 function cardAllowed(card, current) {
   if (!selectedLevels().includes(card.level)) return false;
+  if (state.players.length < (card.minPlayers || 2)) return false;
   if (card.tags.includes('contact') && !document.querySelector('#allowContact').checked) return false;
   if (card.tags.includes('contact') && !current.contact) return false;
   if (card.tags.includes('flirt')   && !current.flirt)   return false;
@@ -55,6 +56,7 @@ export function drawCardForRoom(room) {
   const deck = [...cards, ...roomCustom];
   const allowed = deck.filter(card => {
     if (card.level > maxLevel) return false;
+    if (players.length < (card.minPlayers || 2)) return false;
     if (!settings.allowPhysicalCards && card.tags.includes('contact')) return false;
     if (!settings.allowTargetedCards && card.tags.includes('target')) return false;
     return true;
