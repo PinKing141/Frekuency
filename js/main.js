@@ -5,9 +5,10 @@ import { drawCard, drawCardForRoom } from './core/cardDrawer.js';
 import { advanceTurn, resetTurn } from './core/turnManager.js';
 import { clearPlayers } from './core/storage.js';
 import { customCards, addCustomCard, removeCustomCard, buildCustomCard } from './core/customCards.js';
-import { click as soundClick, drink as soundDrink, isMuted, toggleMute } from './core/sound.js';
+import { click as soundClick, drink as soundDrink, buzz as soundBuzz, isMuted, toggleMute } from './core/sound.js';
 import { showScreen } from './ui/screens.js';
 import { setupDebug } from './ui/debug.js';
+import { startTimer, stopTimer } from './ui/timer.js';
 import { renderCard, renderRoomCard } from './ui/renderCard.js';
 import { renderPlayers, renderScores } from './ui/renderPlayers.js';
 import { escapeHtml } from './utils/helpers.js';
@@ -36,6 +37,7 @@ let roomCode    = null;
 let roomData    = null;
 let myPlayerId  = null;   // unique per participant, independent of the shared anon auth uid
 let unsubRoom   = null;
+let lastRoomCardId = null; // so the multiplayer timer only restarts on a new card
 
 function newId() {
   return crypto.randomUUID ? crypto.randomUUID() : String(Date.now() + Math.random());
@@ -84,11 +86,23 @@ function refreshCustomCards() {
   });
 }
 
+function soloTimerSeconds() {
+  return Number(document.querySelector('#timerSeconds').value) || 0;
+}
+
+// Shared "time's up" handler: buzz and nudge the player to drink/pass.
+function onTimerExpire() {
+  soundBuzz();
+  const footer = document.querySelector('#cardFooter');
+  if (footer) footer.textContent = '⏰ Time\'s up — drink or pass!';
+}
+
 function handleDrawCard() {
   if (state.players.length < 2) return alert('Add at least 2 players.');
   const result = drawCard();
   if (!result) return alert('No cards match these settings. Turn on more levels or update players.');
   renderCard(result);
+  startTimer(soloTimerSeconds(), onTimerExpire);
 }
 
 function handleNextTurn(scored) {
@@ -113,7 +127,13 @@ function onRoomUpdate(room) {
       showScreen('game');
       setupMultiplayerGameUI();
     }
-    if (room.currentCard) renderRoomCard(room.currentCard);
+    if (room.currentCard) {
+      renderRoomCard(room.currentCard);
+      if (room.currentCard.id !== lastRoomCardId) {
+        lastRoomCardId = room.currentCard.id;
+        startTimer((room.settings && room.settings.timerSeconds) || 0, onTimerExpire);
+      }
+    }
     renderMultiplayerScores(room.players);
     return;
   }
@@ -193,6 +213,8 @@ async function handleMpNextTurn(tookDrink) {
 
 function cleanupRoom() {
   if (unsubRoom) { unsubRoom(); unsubRoom = null; }
+  stopTimer();
+  lastRoomCardId = null;
   roomCode   = null;
   roomData   = null;
   myPlayerId = null;
@@ -211,6 +233,7 @@ document.querySelector('#backSetup').onclick = () => {
   if (mpMode) {
     if (confirm('Leave the room?')) { cleanupRoom(); showScreen('start'); }
   } else {
+    stopTimer();
     showScreen('setup');
   }
 };
@@ -328,7 +351,8 @@ document.querySelector('#startMultiGame').onclick = async () => {
   const settings = {
     maxLevel:            Number(document.querySelector('#mpMaxLevel').value),
     allowTargetedCards:  document.querySelector('#mpAllowTarget').checked,
-    allowPhysicalCards:  document.querySelector('#mpAllowContact').checked
+    allowPhysicalCards:  document.querySelector('#mpAllowContact').checked,
+    timerSeconds:        Number(document.querySelector('#mpTimerSeconds').value) || 0
   };
   await updateRoomSettings(roomCode, settings);
 

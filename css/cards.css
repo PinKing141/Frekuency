@@ -103,3 +103,47 @@
 .level-2 { --ink: #ffe8dd; --glow: #ff5a3c; --front: url("../assets/cards/front-l2.svg"); }
 .level-3 { --ink: #ffe6f6; --glow: #ff5fcf; --front: url("../assets/cards/front-l3.svg"); }
 .level-4 { --ink: #ffd9f6; --glow: #ff4fe3; --front: url("../assets/cards/front-l4.svg"); }
+
+/* Turn timer — countdown ring badge above the card */
+.card-scene { position: relative; }
+
+.turn-timer {
+  position: absolute;
+  top: -22px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 56px;
+  height: 56px;
+  z-index: 6;
+  display: grid;
+  place-items: center;
+}
+.turn-timer[hidden] { display: none; }
+.turn-timer svg {
+  position: absolute;
+  inset: 0;
+  width: 56px;
+  height: 56px;
+  transform: rotate(-90deg);
+}
+.tt-track { fill: rgba(7, 6, 10, 0.9); stroke: var(--stroke); stroke-width: 4; }
+.tt-ring {
+  fill: none;
+  stroke: var(--cyan);
+  stroke-width: 4;
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 6px var(--cyan));
+}
+.tt-label {
+  position: relative;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--cyan);
+}
+.turn-timer.expired .tt-ring { stroke: var(--danger); filter: drop-shadow(0 0 8px var(--danger)); }
+.turn-timer.expired .tt-label { color: var(--danger); }
+.turn-timer.expired { animation: tt-pulse 0.5s ease-in-out infinite; }
+@keyframes tt-pulse {
+  50% { transform: translateX(-50%) scale(1.14); }
+}

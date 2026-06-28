@@ -95,6 +95,15 @@
           <label><input id="allowNever"   type="checkbox" checked /> Include Never Have I Ever</label>
           <label><input id="allowWould"   type="checkbox" checked /> Include Would You Rather</label>
         </div>
+        <label style="margin-top:14px">
+          Turn timer
+          <select id="timerSeconds">
+            <option value="0">Off</option>
+            <option value="15">15 seconds</option>
+            <option value="20">20 seconds</option>
+            <option value="30">30 seconds</option>
+          </select>
+        </label>
       </div>
 
       <div class="panel">
@@ -205,6 +214,15 @@
           <label><input id="mpAllowTarget"  type="checkbox" checked /> Allow cards that target another player</label>
           <label><input id="mpAllowContact" type="checkbox" /> Allow physical-contact cards</label>
         </div>
+        <label style="margin-top:14px">
+          Turn timer
+          <select id="mpTimerSeconds">
+            <option value="0">Off</option>
+            <option value="15">15 seconds</option>
+            <option value="20">20 seconds</option>
+            <option value="30">30 seconds</option>
+          </select>
+        </label>
 
         <div style="margin-top:16px; border-top:1px solid var(--stroke); padding-top:16px">
           <h3 style="margin-bottom:10px">Custom cards</h3>
@@ -250,6 +268,13 @@
       </div>
 
       <div class="card-scene">
+        <div id="turnTimer" class="turn-timer" hidden aria-hidden="true">
+          <svg viewBox="0 0 56 56">
+            <circle class="tt-track" cx="28" cy="28" r="24" />
+            <circle class="tt-ring"  cx="28" cy="28" r="24" />
+          </svg>
+          <span id="turnTimerLabel" class="tt-label">20</span>
+        </div>
         <div id="card" class="card level-1">
           <div class="card-face card-back" aria-hidden="true"></div>
           <article class="card-face card-front">

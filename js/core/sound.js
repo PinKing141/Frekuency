@@ -89,6 +89,12 @@ export function drink() {
   tone({ freq: 260, slideTo: 150, type: 'sine', dur: 0.15, gain: 0.14, when: 0.2 });
 }
 
+// Time's up: two harsh descending square blips, like a buzzer.
+export function buzz() {
+  tone({ freq: 320, type: 'square', dur: 0.18, gain: 0.12 });
+  tone({ freq: 240, type: 'square', dur: 0.22, gain: 0.12, when: 0.2 });
+}
+
 export function isMuted() { return muted; }
 export function toggleMute() {
   muted = !muted;

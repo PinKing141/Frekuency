@@ -33,7 +33,8 @@ export async function createRoom(hostName, gender, playerId) {
     settings: {
       maxLevel: 2,
       allowTargetedCards: true,
-      allowPhysicalCards: false
+      allowPhysicalCards: false,
+      timerSeconds: 0
     },
     players: [{
       id: playerId,
