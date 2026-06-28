@@ -25,7 +25,8 @@ import {
   updateRoomSettings,
   markPlayerDrink,
   addRoomCustomCard,
-  setRoomCustomCards
+  setRoomCustomCards,
+  cleanupStaleRooms
 } from './firebase/roomService.js';
 
 // ──────────────────────
@@ -117,7 +118,15 @@ function handleNextTurn(scored) {
 // ──────────────────────
 
 function onRoomUpdate(room) {
-  if (!room) return;
+  // Room document vanished (expired/cleaned up) while we were in it.
+  if (!room) {
+    if (mpMode) {
+      cleanupRoom();
+      showScreen('start');
+      alert('This room has closed.');
+    }
+    return;
+  }
   roomData = room;
 
   // Transition to game when host starts
@@ -314,6 +323,7 @@ document.querySelector('#createRoomBtn').onclick = async () => {
   try {
     await userReady;
     myPlayerId = newId();
+    cleanupStaleRooms();   // fire-and-forget: trim expired rooms
     const code = await createRoom(name, document.querySelector('#hostGender').value, myPlayerId);
     roomCode = code;
     unsubRoom = listenToRoom(code, onRoomUpdate);
