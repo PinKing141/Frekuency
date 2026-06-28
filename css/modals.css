@@ -89,6 +89,7 @@
 .rules-list .lvl.l2 { color: var(--l2); box-shadow: 0 0 14px -5px var(--l2); }
 .rules-list .lvl.l3 { color: var(--l3); box-shadow: 0 0 14px -5px var(--l3); }
 .rules-list .lvl.l4 { color: var(--l4); box-shadow: 0 0 14px -5px var(--l4); }
+.rules-list .lvl.l5 { color: var(--gold); box-shadow: 0 0 14px -5px var(--gold); }
 
 /* Card debug — floating trigger (bottom-left, only shown when unlocked) */
 .debug-toggle {

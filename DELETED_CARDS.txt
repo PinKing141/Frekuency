@@ -1,0 +1,449 @@
+FREAKQUENCY — DELETED (DUPLICATE) CARDS LOG
+Generated when merging the Unified Claude Card Pack into the game.
+
+Existing cards: 180
+Unified pack cards parsed: 281
+After Dark .js cards parsed: 86
+Combined before dedup: 547
+Duplicates removed: 86
+Final card count: 461
+Final by level: L1 81 | L2 115 | L3 113 | L4 92 | Wildcard 60
+
+A card was deleted when its text (ignoring punctuation/placeholders) exactly
+matched a card already kept. The kept copy's id is shown as "duplicate of".
+Note: the After Dark cards exist in both uploaded files (afterDarkCards.js and
+the unified .txt). The unified .txt was used as the single source of truth, so
+the .js copies were never added — only true text duplicates appear below.
+
+================================================================================
+
+ID: l2_ad_001  [afterDarkCards.js]
+Level: 2   Type: Truth
+Duplicate of: l2_ad_001
+Text: Which player looks like they know exactly what they’re doing in private?
+---
+ID: l2_ad_002  [afterDarkCards.js]
+Level: 2   Type: Truth
+Duplicate of: l2_ad_002
+Text: Point to the player with the most dangerous eye contact.
+---
+ID: l2_ad_003  [afterDarkCards.js]
+Level: 2   Type: Would You Rather
+Duplicate of: l2_ad_003
+Text: Would you rather kiss your crush in front of everyone or let everyone read your last risky text?
+---
+ID: l2_ad_004  [afterDarkCards.js]
+Level: 2   Type: Truth
+Duplicate of: l2_ad_004
+Text: Who here would you trust to teach you a bedroom trick?
+---
+ID: l2_ad_005  [afterDarkCards.js]
+Level: 2   Type: Dare
+Duplicate of: l2_ad_005
+Text: Give your best ‘come here’ look to the player across from you.
+---
+ID: l2_ad_006  [afterDarkCards.js]
+Level: 2   Type: Truth
+Duplicate of: l2_ad_006
+Text: What is one compliment that would instantly make you fold?
+---
+ID: l2_ad_007  [afterDarkCards.js]
+Level: 2   Type: Never Have I Ever
+Duplicate of: l2_ad_007
+Text: Never have I ever flirted just to see if I still had it.
+---
+ID: l2_ad_008  [afterDarkCards.js]
+Level: 2   Type: Dare
+Duplicate of: l2_ad_008
+Text: Let the group choose your new flirty nickname for the next 3 rounds.
+---
+ID: l2_ad_009  [afterDarkCards.js]
+Level: 2   Type: Truth
+Duplicate of: l2_ad_009
+Text: Which player would be the hardest to ignore if they were flirting with you?
+---
+ID: l2_ad_010  [afterDarkCards.js]
+Level: 2   Type: Dare
+Duplicate of: l2_ad_010
+Text: Whisper a fake scandal about yourself to the player on your left.
+---
+ID: l2_ad_011  [afterDarkCards.js]
+Level: 2   Type: Truth
+Duplicate of: l2_ad_011
+Text: What is your most random turn-on that sounds stupid out loud?
+---
+ID: l2_ad_012  [afterDarkCards.js]
+Level: 2   Type: Would You Rather
+Duplicate of: l2_ad_012
+Text: Would you rather be caught sending a risky text or receiving one?
+---
+ID: l2_ad_013  [afterDarkCards.js]
+Level: 2   Type: Truth
+Duplicate of: l2_ad_013
+Text: What’s the most obvious sign you’re attracted to someone?
+---
+ID: l2_ad_014  [afterDarkCards.js]
+Level: 2   Type: Dare
+Duplicate of: l2_ad_014
+Text: Hold eye contact with a player while saying ‘you know what you did.’
+---
+ID: l2_ad_015  [afterDarkCards.js]
+Level: 2   Type: Truth
+Duplicate of: l2_ad_015
+Text: Who here gives ‘innocent in public, chaos in private’ energy?
+---
+ID: l2_ad_016  [afterDarkCards.js]
+Level: 2   Type: Dare
+Duplicate of: l2_ad_016
+Text: Let a player rate your flirting voice out of 10.
+---
+ID: l3_ad_001  [afterDarkCards.js]
+Level: 3   Type: Dare
+Duplicate of: l3_ad_001
+Text: Pick a player. They choose your ‘danger zone’ for a 5-second over-clothes touch, or you drink.
+---
+ID: l3_ad_002  [afterDarkCards.js]
+Level: 3   Type: Dare
+Duplicate of: l3_ad_002
+Text: Sit on a player’s lap until your next turn, or drink.
+---
+ID: l3_ad_003  [afterDarkCards.js]
+Level: 3   Type: Dare
+Duplicate of: l3_ad_003
+Text: Let a player give you a 20-second shoulder, neck, or lower-back massage.
+---
+ID: l3_ad_004  [afterDarkCards.js]
+Level: 3   Type: Dare
+Duplicate of: l3_ad_004
+Text: Pick a player to trace one finger along your arm, jawline, or waist while you keep a straight face.
+---
+ID: l3_ad_005  [afterDarkCards.js]
+Level: 3   Type: Dare
+Duplicate of: l3_ad_005
+Text: Give a player a 5-second neck kiss, or drink.
+---
+ID: l3_ad_006  [afterDarkCards.js]
+Level: 3   Type: Dare
+Duplicate of: l3_ad_006
+Text: Receive a 5-second neck kiss from a player, or drink.
+---
+ID: l3_ad_007  [afterDarkCards.js]
+Level: 3   Type: Dare
+Duplicate of: l3_ad_007
+Text: Let the group choose one player to feed you a drink sip like you’re in a music video.
+---
+ID: l3_ad_008  [afterDarkCards.js]
+Level: 3   Type: Dare
+Duplicate of: l3_ad_008
+Text: Pick a player and act out a dramatic ‘almost kiss’ scene for 10 seconds.
+---
+ID: l3_ad_009  [afterDarkCards.js]
+Level: 3   Type: Dare
+Duplicate of: l3_ad_009
+Text: Let a player place one hand on your waist while you give your best serious model walk.
+---
+ID: l3_ad_010  [afterDarkCards.js]
+Level: 3   Type: Dare
+Duplicate of: l3_ad_010
+Text: Pick a player to sit close enough that your knees touch for the next round.
+---
+ID: l3_ad_011  [afterDarkCards.js]
+Level: 3   Type: Dare
+Duplicate of: l3_ad_011
+Text: Give a player a lap-dance performance for 15 seconds. Comedy counts.
+---
+ID: l3_ad_012  [afterDarkCards.js]
+Level: 3   Type: Dare
+Duplicate of: l3_ad_012
+Text: Let a player choose one spot above the waist to place a quick kiss, or drink.
+---
+ID: l3_ad_013  [afterDarkCards.js]
+Level: 3   Type: Dare
+Duplicate of: l3_ad_013
+Text: Close your eyes. A player gives you one harmless mystery touch on the arm, shoulder, waist, or back. Guess who.
+---
+ID: l3_ad_014  [afterDarkCards.js]
+Level: 3   Type: Dare
+Duplicate of: l3_ad_014
+Text: Let a player write one spicy word on your arm with their finger. Guess the word.
+---
+ID: l3_ad_015  [afterDarkCards.js]
+Level: 3   Type: Dare
+Duplicate of: l3_ad_015
+Text: Pick a player and switch seats so you’re next to them for the next 3 rounds.
+---
+ID: l3_ad_016  [afterDarkCards.js]
+Level: 3   Type: Dare
+Duplicate of: l3_ad_016
+Text: Give the player on your right a compliment that sounds innocent but clearly is not.
+---
+ID: l3_ad_017  [afterDarkCards.js]
+Level: 3   Type: Truth
+Duplicate of: l3_ad_017
+Text: What is the boldest thing someone could do to get your attention tonight?
+---
+ID: l3_ad_018  [afterDarkCards.js]
+Level: 3   Type: Truth
+Duplicate of: l3_ad_018
+Text: Which player would make you nervous if they sat too close?
+---
+ID: l3_ad_019  [afterDarkCards.js]
+Level: 3   Type: Never Have I Ever
+Duplicate of: l3_ad_019
+Text: Never have I ever wanted to kiss someone in this room or a room like this.
+---
+ID: l3_ad_020  [afterDarkCards.js]
+Level: 3   Type: Would You Rather
+Duplicate of: l3_ad_020
+Text: Would you rather give a neck kiss or receive one?
+---
+ID: l3_ad_021  [afterDarkCards.js]
+Level: 3   Type: Dare
+Duplicate of: l3_ad_021
+Text: Let a player choose your flirty pose. Hold it for 10 seconds while the group judges.
+---
+ID: l3_ad_022  [afterDarkCards.js]
+Level: 3   Type: Dare
+Duplicate of: l3_ad_022
+Text: Pick a player. They get 10 seconds to make you blush using only words.
+---
+ID: l3_ad_023  [afterDarkCards.js]
+Level: 3   Type: Dare
+Duplicate of: l3_ad_023
+Text: Act out three bedroom positions using only hand gestures and facial expressions.
+---
+ID: l3_ad_024  [afterDarkCards.js]
+Level: 3   Type: Truth
+Duplicate of: l3_ad_024
+Text: What is one ‘green flag’ that immediately becomes a turn-on?
+---
+ID: l3_ad_025  [afterDarkCards.js]
+Level: 3   Type: Dare
+Duplicate of: l3_ad_025
+Text: Choose a player to hold your hand like you’re in a dramatic forbidden romance until your next turn.
+---
+ID: l3_ad_026  [afterDarkCards.js]
+Level: 3   Type: Dare
+Duplicate of: l3_ad_026
+Text: Let a player fix your outfit, hair, or jewellery like they’re getting you ready for a date.
+---
+ID: l3_ad_027  [afterDarkCards.js]
+Level: 3   Type: Truth
+Duplicate of: l3_ad_027
+Text: Which player looks like they’d be trouble after midnight?
+---
+ID: l3_ad_028  [afterDarkCards.js]
+Level: 3   Type: Dare
+Duplicate of: l3_ad_028
+Text: Pick a player to stand behind you and guide your hands through a fake movie-scene dance move.
+---
+ID: l4_ad_001  [afterDarkCards.js]
+Level: 4   Type: Dare
+Duplicate of: l4_ad_001
+Text: Pick a player for a 30-second oil-free bodyguard massage: shoulders, arms, or back. Make it dramatic.
+---
+ID: l4_ad_002  [afterDarkCards.js]
+Level: 4   Type: Dare
+Duplicate of: l4_ad_002
+Text: The group chooses one player to be your ‘temptation test.’ They have 20 seconds to make you break eye contact.
+---
+ID: l4_ad_003  [afterDarkCards.js]
+Level: 4   Type: Dare
+Duplicate of: l4_ad_003
+Text: Choose a player and recreate a steamy movie poster pose for 10 seconds.
+---
+ID: l4_ad_004  [afterDarkCards.js]
+Level: 4   Type: Dare
+Duplicate of: l4_ad_004
+Text: Pick a player. One of you gives the other a 10-second cheek, neck, or hand kiss.
+---
+ID: l4_ad_005  [afterDarkCards.js]
+Level: 4   Type: Dare
+Duplicate of: l4_ad_005
+Text: Let a player choose one over-clothes ‘confidence check’ spot: shoulder, chest, waist, thigh, or back. Hold still for 5 seconds.
+---
+ID: l4_ad_006  [afterDarkCards.js]
+Level: 4   Type: Dare
+Duplicate of: l4_ad_006
+Text: Give a player a 20-second slow dance like the room has disappeared.
+---
+ID: l4_ad_007  [afterDarkCards.js]
+Level: 4   Type: Dare
+Duplicate of: l4_ad_007
+Text: Pick a player to sit on your lap or sit on theirs for one full round.
+---
+ID: l4_ad_008  [afterDarkCards.js]
+Level: 4   Type: Dare
+Duplicate of: l4_ad_008
+Text: Choose a player. Let them whisper the wildest card they wish existed in this game.
+---
+ID: l4_ad_009  [afterDarkCards.js]
+Level: 4   Type: Truth
+Duplicate of: l4_ad_009
+Text: Say the most explicit compliment you could give someone without using any banned words.
+---
+ID: l4_ad_010  [afterDarkCards.js]
+Level: 4   Type: Dare
+Duplicate of: l4_ad_010
+Text: The group names two players. They act out ‘first kiss in a forbidden romance’ for 10 seconds.
+---
+ID: l4_ad_011  [afterDarkCards.js]
+Level: 4   Type: Dare
+Duplicate of: l4_ad_011
+Text: Pick a player to give you a 10-second ‘inspection’ using only their eyes. Try not to smile.
+---
+ID: l4_ad_012  [afterDarkCards.js]
+Level: 4   Type: Dare
+Duplicate of: l4_ad_012
+Text: Choose a player to be your throne. Sit beside, on, or against them for the next round.
+---
+ID: l4_ad_013  [afterDarkCards.js]
+Level: 4   Type: Dare
+Duplicate of: l4_ad_013
+Text: Let the group choose a spicy role-play scenario. Act it with a player for 20 seconds.
+---
+ID: l4_ad_014  [afterDarkCards.js]
+Level: 4   Type: Truth
+Duplicate of: l4_ad_014
+Text: Reveal one bedroom opinion that would make the group pause for two seconds.
+---
+ID: l4_ad_015  [afterDarkCards.js]
+Level: 4   Type: Dare
+Duplicate of: l4_ad_015
+Text: Pick a player. One of you gives the other a 15-second hand, shoulder, or thigh massage.
+---
+ID: l4_ad_016  [afterDarkCards.js]
+Level: 4   Type: Dare
+Duplicate of: l4_ad_016
+Text: Group vote: you must either tell your wildest almost-story or take the drink penalty immediately.
+---
+ID: l4_ad_017  [afterDarkCards.js]
+Level: 4   Type: Would You Rather
+Duplicate of: l4_ad_017
+Text: Would you rather have your last spicy thought read aloud or act it out silently?
+---
+ID: l4_ad_018  [afterDarkCards.js]
+Level: 4   Type: Never Have I Ever
+Duplicate of: l4_ad_018
+Text: Never have I ever done something risky and then pretended I was innocent five minutes later.
+---
+ID: l4_ad_019  [afterDarkCards.js]
+Level: 4   Type: Dare
+Duplicate of: l4_ad_019
+Text: Pick a player. Trade one flirty secret each, whispered, then both say ‘innocent’ out loud.
+---
+ID: l4_ad_020  [afterDarkCards.js]
+Level: 4   Type: Dare
+Duplicate of: l4_ad_020
+Text: Let a player give you a 5-second ‘over-the-clothes vibe check’ chosen from: arm, waist, thigh, back, or shoulder.
+---
+ID: l4_ad_021  [afterDarkCards.js]
+Level: 4   Type: Truth
+Duplicate of: l4_ad_021
+Text: Which card tonight has secretly made you think, ‘I might actually do that’?
+---
+ID: l4_ad_022  [afterDarkCards.js]
+Level: 4   Type: Dare
+Duplicate of: l4_ad_022
+Text: The player to your left chooses: neck kiss, slow dance, lap seat, or drink.
+---
+ID: wc_ad_001  [afterDarkCards.js]
+Level: 5   Type: Wildcard
+Duplicate of: wc_ad_001
+Text: Power Card: Swap your card with any player’s next card.
+---
+ID: wc_ad_002  [afterDarkCards.js]
+Level: 5   Type: Wildcard
+Duplicate of: wc_ad_002
+Text: Double Dare: The next physical card must be done by two players or both drink.
+---
+ID: wc_ad_003  [afterDarkCards.js]
+Level: 5   Type: Wildcard
+Duplicate of: wc_ad_003
+Text: Heat Check: Everyone votes which level the next card should be. Majority wins.
+---
+ID: wc_ad_004  [afterDarkCards.js]
+Level: 5   Type: Wildcard
+Duplicate of: wc_ad_004
+Text: Reverse Turn: The player who gave you the most eye contact gets the next card.
+---
+ID: wc_ad_005  [afterDarkCards.js]
+Level: 5   Type: Wildcard
+Duplicate of: wc_ad_005
+Text: Truth Tax: Before the next card, everyone answers: who here is the most tempting trouble?
+---
+ID: wc_ad_006  [afterDarkCards.js]
+Level: 5   Type: Wildcard
+Duplicate of: wc_ad_006
+Text: Audience Choice: The group rewrites your card to be 20% worse or 20% easier.
+---
+ID: wc_ad_007  [afterDarkCards.js]
+Level: 5   Type: Wildcard
+Duplicate of: wc_ad_007
+Text: Safe Chaos: Pick any player. They choose whether your next card is a truth, dare, or would-you-rather.
+---
+ID: wc_ad_008  [afterDarkCards.js]
+Level: 5   Type: Wildcard
+Duplicate of: wc_ad_008
+Text: Heat Shield: Save this card. Use it once to downgrade an L4 card to L3.
+---
+ID: wc_ad_009  [afterDarkCards.js]
+Level: 5   Type: Wildcard
+Duplicate of: wc_ad_009
+Text: Pressure Cooker: Until your next turn, every time you laugh at a spicy card, drink.
+---
+ID: wc_ad_010  [afterDarkCards.js]
+Level: 5   Type: Wildcard
+Duplicate of: wc_ad_010
+Text: Pick Your Poison: Choose neck kiss, lap seat, spicy truth, or drink.
+---
+ID: wc_ad_011  [afterDarkCards.js]
+Level: 5   Type: Wildcard
+Duplicate of: wc_ad_011
+Text: Group Director: The group can add one dramatic detail to your next dare.
+---
+ID: wc_ad_012  [afterDarkCards.js]
+Level: 5   Type: Wildcard
+Duplicate of: wc_ad_012
+Text: Temptation Chain: Pick a player. They pick the next player after them.
+---
+ID: wc_ad_013  [afterDarkCards.js]
+Level: 5   Type: Wildcard
+Duplicate of: wc_ad_013
+Text: No Words Round: The next player must answer their card using only gestures.
+---
+ID: wc_ad_014  [afterDarkCards.js]
+Level: 5   Type: Wildcard
+Duplicate of: wc_ad_014
+Text: Spicy Auction: Everyone offers a dare. You choose one to do or drink.
+---
+ID: wc_ad_015  [afterDarkCards.js]
+Level: 5   Type: Wildcard
+Duplicate of: wc_ad_015
+Text: The Floor Is Innocence: Everyone must act innocent for one round. First person to break character drinks.
+---
+ID: wc_ad_016  [afterDarkCards.js]
+Level: 5   Type: Wildcard
+Duplicate of: wc_ad_016
+Text: Card Dealer: Draw two cards from the same level and choose one. The rejected card goes to the next player.
+---
+ID: wc_ad_017  [afterDarkCards.js]
+Level: 5   Type: Wildcard
+Duplicate of: wc_ad_017
+Text: Intensity Vote: The group secretly votes L1–L4 for your next card. Highest vote wins.
+---
+ID: wc_ad_018  [afterDarkCards.js]
+Level: 5   Type: Wildcard
+Duplicate of: wc_ad_018
+Text: Mirror Match: Pick a player. Whatever your next card asks, they must answer/do their version too or drink.
+---
+ID: wc_ad_019  [afterDarkCards.js]
+Level: 5   Type: Wildcard
+Duplicate of: wc_ad_019
+Text: One Round Curse: Until your next turn, you must call everyone ‘trouble.’ Forget and drink.
+---
+ID: wc_ad_020  [afterDarkCards.js]
+Level: 5   Type: Wildcard
+Duplicate of: wc_ad_020
+Text: Forbidden Menu: Choose one: truth, dare, touch, performance, or drink. The group creates the card.
+---

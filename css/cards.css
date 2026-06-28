@@ -109,6 +109,8 @@
 .level-2 { --ink: #ffe8dd; --glow: #ff5a3c; --front: url("../assets/cards/front-l2.svg"); }
 .level-3 { --ink: #ffe6f6; --glow: #ff5fcf; --front: url("../assets/cards/front-l3.svg"); }
 .level-4 { --ink: #ffd9f6; --glow: #ff4fe3; --front: url("../assets/cards/front-l4.svg"); }
+/* Wildcard (level 5) — gold/chaos theme; reuses the L4 frame art */
+.level-5 { --ink: #fff2cf; --glow: #ffd36b; --front: url("../assets/cards/front-l4.svg"); }
 
 /* Deck of card-backs stacked behind the active card */
 .deck-stack { position: absolute; inset: 0; z-index: 0; }
