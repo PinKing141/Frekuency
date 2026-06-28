@@ -24,8 +24,7 @@ function cardAllowed(card, current) {
 export function drawCard() {
   const current = state.players[state.turn % state.players.length];
   const deck = [...cards, ...customCards];
-  // The dead pile is set aside permanently (until reshuffled), so exclude it.
-  const allowed = deck.filter(card => cardAllowed(card, current) && !state.deadPile.includes(card.id));
+  const allowed = deck.filter(card => cardAllowed(card, current));
   if (!allowed.length) return null;
 
   let card = allowed[Math.floor(Math.random() * allowed.length)];
@@ -44,17 +43,6 @@ export function drawCard() {
 
   state.currentCard = card;
   return { card, text, current };
-}
-
-// Move the just-played card out of rotation into the face-down dead pile.
-export function killCard(id) {
-  if (id && !state.deadPile.includes(id)) state.deadPile.push(id);
-}
-
-// Reshuffle the live deck: clear the short anti-repeat buffer so the remaining
-// (non-dead) cards get a fresh random order. The dead pile is left untouched.
-export function reshuffleCurrent() {
-  state.usedCards = [];
 }
 
 // --- Multiplayer mode: draws using room data, no DOM reads ---

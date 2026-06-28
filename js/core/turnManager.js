@@ -15,5 +15,4 @@ export function advanceTurn(scored) {
 export function resetTurn() {
   state.turn = 0;
   state.usedCards = [];
-  state.deadPile = [];
 }

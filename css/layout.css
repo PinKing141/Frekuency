@@ -2,13 +2,12 @@
 
 body {
   margin: 0;
-  height: 100vh;
-  height: 100dvh;          /* dynamic viewport — accounts for mobile chrome */
+  min-height: 100vh;
   font-family: var(--font-body);
   color: var(--text);
   background: var(--bg-0);
   -webkit-font-smoothing: antialiased;
-  overflow: hidden;        /* screens manage their own scroll; setup scrolls */
+  overflow-x: hidden;
 }
 
 /* Layered animated background */
@@ -38,26 +37,12 @@ button { cursor: pointer; border: 0; }
 
 .app-shell {
   width: min(940px, 100%);
-  height: 100%;
   margin: 0 auto;
-  padding: 16px 20px 18px;
-  display: flex;
-  flex-direction: column;
+  padding: 22px 20px 40px;
 }
 
-.screen { display: none; min-height: 0; }
-/* Active screens fill the shell and lay out as a column. Most screens fit the
-   viewport with no scroll; the ones that can't (setup, lobby, waiting) scroll
-   internally rather than clipping, so you can never get stuck. */
-.screen.active {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  min-height: 0;
-  animation: screen-in 0.45s var(--ease) both;
-}
-#screen-setup, #screen-lobby, #screen-waiting { overflow-y: auto; }
-#screen-start.active { justify-content: center; }
+.screen { display: none; }
+.screen.active { display: block; animation: screen-in 0.45s var(--ease) both; }
 
 /* Glass surfaces */
 .panel {
@@ -111,7 +96,7 @@ h2 { margin: 0 0 10px; font-family: var(--font-display); font-size: 1.4rem; lett
 .hero {
   position: relative;
   text-align: center;
-  padding: 24px;
+  padding: 8vh 24px 36px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -160,8 +145,6 @@ h2 { margin: 0 0 10px; font-family: var(--font-display); font-size: 1.4rem; lett
   color: var(--muted);
 }
 .room-bar strong { color: var(--cyan); letter-spacing: 0.18em; font-family: var(--font-display); }
-/* .room-bar sets display:flex, which would otherwise beat the [hidden] UA rule */
-.room-bar[hidden] { display: none; }
 
 /* Room code */
 .room-code-display {
@@ -221,53 +204,10 @@ h2 { margin: 0 0 10px; font-family: var(--font-display); font-size: 1.4rem; lett
   margin: 12px 0 0;
 }
 
-/* Back arrow — consistent on every screen's topbar so you never get stuck */
-.back-btn {
-  font-size: 1.15rem;
-  line-height: 1;
-  padding: 9px 15px;
-}
-
-/* Game screen fits the viewport: the card is height-capped and the scoreboard
-   takes whatever space is left, scrolling internally if there are many players. */
-#screen-game.active { gap: 0; }
-#screen-game .game-header { flex: 0 0 auto; margin: 4px 0 8px; }
-#screen-game .room-bar { flex: 0 0 auto; }
-#screen-game .game-actions { flex: 0 0 auto; margin: 12px 0; }
-#screen-game .pile-row { flex: 0 0 auto; }
-.scoreboard { margin-top: 10px; }
-#screen-game .scoreboard {
-  flex: 1 1 auto;
-  min-height: 0;
-  overflow-y: auto;
-  margin-top: 10px;
-}
-
-/* Dead pile + reshuffle row */
-.pile-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  margin: 2px 0 4px;
-}
-.pile-row .ghost-btn { padding: 9px 14px; font-size: 0.82rem; }
-.dead-pile { display: flex; align-items: center; gap: 10px; color: var(--muted); font-size: 0.78rem; }
-.dead-pile[hidden] { display: none; }
-.dead-stack {
-  width: 28px;
-  height: 39px;
-  border-radius: 6px;
-  background: center / cover no-repeat url("../assets/cards/back-main.svg");
-  box-shadow:
-    3px 3px 0 -1px rgba(255, 255, 255, 0.08),
-    6px 6px 0 -2px rgba(255, 255, 255, 0.05),
-    0 6px 14px rgba(0, 0, 0, 0.5);
-}
-.dead-count strong { color: var(--text); font-family: var(--font-display); }
+.scoreboard { margin-top: 18px; }
 
 @media (max-width: 680px) {
-  .app-shell { padding: 12px 14px 14px; }
+  .app-shell { padding: 16px 14px 32px; }
+  .hero { padding-top: 5vh; }
   .game-header { align-items: center; }
-  .pile-row .ghost-btn { font-size: 0.76rem; padding: 8px 12px; }
 }

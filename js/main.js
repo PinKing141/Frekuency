@@ -1,11 +1,11 @@
 // ── Solo mode imports ──
 import { state } from './core/gameState.js';
 import { addPlayer, removePlayer, resetPlayers } from './core/playerManager.js';
-import { drawCard, drawCardForRoom, killCard, reshuffleCurrent } from './core/cardDrawer.js';
+import { drawCard, drawCardForRoom } from './core/cardDrawer.js';
 import { advanceTurn, resetTurn } from './core/turnManager.js';
 import { clearPlayers } from './core/storage.js';
 import { customCards, addCustomCard, removeCustomCard, buildCustomCard } from './core/customCards.js';
-import { click as soundClick, drink as soundDrink, buzz as soundBuzz, flip as soundFlip, isMuted, toggleMute } from './core/sound.js';
+import { click as soundClick, drink as soundDrink, buzz as soundBuzz, isMuted, toggleMute } from './core/sound.js';
 import { showScreen } from './ui/screens.js';
 import { setupDebug } from './ui/debug.js';
 import { startTimer, stopTimer } from './ui/timer.js';
@@ -13,10 +13,21 @@ import { renderCard, renderRoomCard } from './ui/renderCard.js';
 import { renderPlayers, renderScores } from './ui/renderPlayers.js';
 import { escapeHtml } from './utils/helpers.js';
 
-// ── Multiplayer (Firebase) — loaded lazily ──
-// Firebase comes from a CDN, so a static import would make a network failure
-// (or being offline) break the whole app, including solo. Instead we import it
-// on demand the first time multiplayer is used; solo never touches the network.
+// ── Multiplayer imports ──
+import { loginGuest, waitForUser } from './firebase/firebaseConfig.js';
+import {
+  createRoom,
+  joinRoom,
+  listenToRoom,
+  startGame,
+  updateCurrentCard,
+  advanceRoomTurn,
+  updateRoomSettings,
+  markPlayerDrink,
+  addRoomCustomCard,
+  setRoomCustomCards,
+  cleanupStaleRooms
+} from './firebase/roomService.js';
 
 // ──────────────────────
 // State
@@ -33,26 +44,12 @@ function newId() {
   return crypto.randomUUID ? crypto.randomUUID() : String(Date.now() + Math.random());
 }
 
-// Lazily import Firebase + room service and sign in anonymously. Anonymous
-// sign-in only satisfies Firestore security rules (request.auth != null);
-// player identity uses myPlayerId, NOT the auth uid (two people in the same
-// browser share an anon uid, which would otherwise collide on join).
-let fb = null;
-let fbLoading = null;
-function loadFirebase() {
-  if (fb) return Promise.resolve(fb);
-  if (fbLoading) return fbLoading;
-  fbLoading = Promise.all([
-    import('./firebase/firebaseConfig.js'),
-    import('./firebase/roomService.js')
-  ]).then(async ([cfg, svc]) => {
-    fb = { ...cfg, ...svc };
-    try { await cfg.loginGuest(); await cfg.waitForUser(); }
-    catch (err) { console.error('Firebase auth failed:', err); }
-    return fb;
-  });
-  return fbLoading;
-}
+// Anonymous sign-in only satisfies Firestore security rules (request.auth != null).
+// Player identity uses myPlayerId, NOT the auth uid — two people in the same browser
+// share an anon uid, which previously made the second join collide with the first.
+const userReady = loginGuest()
+  .then(() => waitForUser())
+  .catch(err => { console.error('Firebase auth failed:', err); }); // solo still works
 
 // ──────────────────────
 // Solo helpers
@@ -94,15 +91,6 @@ function soloTimerSeconds() {
   return Number(document.querySelector('#timerSeconds').value) || 0;
 }
 
-// Reflect the face-down dead pile (count + visibility) on the game screen.
-function refreshDeadPile() {
-  const pile  = document.querySelector('#deadPile');
-  const count = document.querySelector('#deadCount');
-  const n = state.deadPile.length;
-  if (count) count.textContent = n;
-  if (pile)  pile.hidden = mpMode || n === 0;
-}
-
 // Shared "time's up" handler: buzz and nudge the player to drink/pass.
 function onTimerExpire() {
   soundBuzz();
@@ -120,8 +108,6 @@ function handleDrawCard() {
 
 function handleNextTurn(scored) {
   if (!state.players.length) return;
-  // The card that was on screen is done — set it aside in the dead pile.
-  if (state.currentCard) { killCard(state.currentCard.id); refreshDeadPile(); }
   advanceTurn(scored);
   renderScores(state.players);
   handleDrawCard();
@@ -186,7 +172,7 @@ function updateWaitingScreen(room) {
   renderCardList(document.querySelector('#mpCustomList'), room.customCards || [], async c => {
     if (!roomData || roomData.hostId !== myPlayerId) return;
     const next = (roomData.customCards || []).filter(x => x.id !== c.id);
-    try { const f = await loadFirebase(); await f.setRoomCustomCards(roomCode, next); }
+    try { await setRoomCustomCards(roomCode, next); }
     catch (err) { console.error('Remove custom card failed:', err); }
   });
 }
@@ -199,7 +185,6 @@ function setupMultiplayerGameUI() {
   document.querySelector('#onlineCount').textContent =
     roomData ? `${roomData.players.length} players` : '';
   document.querySelector('#backSetup').textContent = 'Leave';
-  refreshDeadPile();   // dead pile / reshuffle are solo-only — hide them online
 }
 
 function renderMultiplayerScores(players) {
@@ -216,25 +201,23 @@ async function handleMpDraw() {
   if (!roomData) return;
   const card = drawCardForRoom(roomData);
   if (!card) return alert('No cards match the current room settings.');
-  const f = await loadFirebase();
-  await f.updateCurrentCard(roomCode, card);
+  await updateCurrentCard(roomCode, card);
 }
 
 async function handleMpNextTurn(tookDrink) {
   if (!roomData) return;
-  const f = await loadFirebase();
   if (tookDrink) {
     const players = roomData.players.map((p, i) =>
       i === roomData.currentPlayerIndex ? { ...p, drinksTaken: (p.drinksTaken || 0) + 1 } : p
     );
-    await f.markPlayerDrink(roomCode, players);
+    await markPlayerDrink(roomCode, players);
   }
   const nextIndex = (roomData.currentPlayerIndex + 1) % roomData.players.length;
-  await f.advanceRoomTurn(roomCode, nextIndex);
+  await advanceRoomTurn(roomCode, nextIndex);
   // onSnapshot fires → roomData updates → draw next card
   const updatedRoom = { ...roomData, currentPlayerIndex: nextIndex };
   const card = drawCardForRoom(updatedRoom);
-  if (card) await f.updateCurrentCard(roomCode, card);
+  if (card) await updateCurrentCard(roomCode, card);
 }
 
 function cleanupRoom() {
@@ -254,7 +237,6 @@ function cleanupRoom() {
 // ──────────────────────
 
 document.querySelector('#startSetup').onclick = () => showScreen('setup');
-document.querySelector('#setupBack').onclick  = () => { stopTimer(); showScreen('start'); };
 
 document.querySelector('#backSetup').onclick = () => {
   if (mpMode) {
@@ -298,17 +280,9 @@ document.querySelector('#customText').addEventListener('keydown', e => {
 
 document.querySelector('#beginGame').onclick = () => {
   if (state.players.length < 2) return alert('Add at least 2 players.');
-  resetTurn();           // fresh session: clear dead pile + rotation
-  refreshDeadPile();
   showScreen('game');
   renderScores(state.players);
   handleDrawCard();
-};
-
-document.querySelector('#reshuffleCards').onclick = () => {
-  reshuffleCurrent();    // re-randomise the live deck; dead pile is untouched
-  soundFlip();
-  handleDrawCard();      // deal a fresh card from the reshuffled deck
 };
 
 document.querySelector('#newCard').onclick = () => {
@@ -332,7 +306,6 @@ document.querySelector('#resetAll').onclick = () => {
   resetPlayers();
   clearPlayers();
   resetTurn();
-  refreshDeadPile();
   refreshPlayers();
   renderScores(state.players);
 };
@@ -341,19 +314,19 @@ document.querySelector('#resetAll').onclick = () => {
 // Event bindings — multiplayer
 // ──────────────────────
 
-document.querySelector('#startMultiplayer').onclick = () => { showScreen('lobby'); loadFirebase(); };
+document.querySelector('#startMultiplayer').onclick = () => showScreen('lobby');
 document.querySelector('#lobbyBack').onclick        = () => showScreen('start');
 
 document.querySelector('#createRoomBtn').onclick = async () => {
   const name = document.querySelector('#hostName').value.trim();
   if (!name) return alert('Enter your name first.');
   try {
-    const f = await loadFirebase();
+    await userReady;
     myPlayerId = newId();
-    f.cleanupStaleRooms();   // fire-and-forget: trim expired rooms
-    const code = await f.createRoom(name, document.querySelector('#hostGender').value, myPlayerId);
+    cleanupStaleRooms();   // fire-and-forget: trim expired rooms
+    const code = await createRoom(name, document.querySelector('#hostGender').value, myPlayerId);
     roomCode = code;
-    unsubRoom = f.listenToRoom(code, onRoomUpdate);
+    unsubRoom = listenToRoom(code, onRoomUpdate);
     document.querySelector('#waitingRoomCode').textContent = code;
     document.querySelector('#roomCodeDisplay').textContent = code;
     showScreen('waiting');
@@ -369,10 +342,10 @@ document.querySelector('#joinRoomBtn').onclick = async () => {
   const gender = document.querySelector('#joinGender').value;
   if (!name || !code) return alert('Enter your name and the room code.');
   try {
-    const f = await loadFirebase();
+    await userReady;
     myPlayerId = newId();
-    roomCode = await f.joinRoom(code, name, gender, myPlayerId);
-    unsubRoom = f.listenToRoom(roomCode, onRoomUpdate);
+    roomCode = await joinRoom(code, name, gender, myPlayerId);
+    unsubRoom = listenToRoom(roomCode, onRoomUpdate);
     showScreen('waiting');
   } catch (err) {
     console.error('Join room failed:', err);
@@ -384,7 +357,6 @@ document.querySelector('#startMultiGame').onclick = async () => {
   if (!roomData || roomData.hostId !== myPlayerId) return;
   if (roomData.players.length < 2) return alert('Need at least 2 players to start.');
 
-  const f = await loadFirebase();
   // Push host's chosen settings before starting
   const settings = {
     maxLevel:            Number(document.querySelector('#mpMaxLevel').value),
@@ -392,14 +364,14 @@ document.querySelector('#startMultiGame').onclick = async () => {
     allowPhysicalCards:  document.querySelector('#mpAllowContact').checked,
     timerSeconds:        Number(document.querySelector('#mpTimerSeconds').value) || 0
   };
-  await f.updateRoomSettings(roomCode, settings);
+  await updateRoomSettings(roomCode, settings);
 
   // Draw first card with the new settings applied
   const updatedRoom = { ...roomData, settings };
   const firstCard = drawCardForRoom(updatedRoom);
-  if (firstCard) await f.updateCurrentCard(roomCode, firstCard);
+  if (firstCard) await updateCurrentCard(roomCode, firstCard);
 
-  await f.startGame(roomCode);
+  await startGame(roomCode);
 };
 
 document.querySelector('#mpAddCustomCard').onclick = async () => {
@@ -410,8 +382,7 @@ document.querySelector('#mpAddCustomCard').onclick = async () => {
   const card = buildCustomCard({ text, level: document.querySelector('#mpCustomLevel').value });
   input.value = '';
   try {
-    const f = await loadFirebase();
-    await f.addRoomCustomCard(roomCode, card);
+    await addRoomCustomCard(roomCode, card);
   } catch (err) {
     console.error('Add custom card failed:', err);
     alert('Could not add the card. Check your connection.');
@@ -421,10 +392,6 @@ document.querySelector('#mpAddCustomCard').onclick = async () => {
 document.querySelector('#leaveRoom').onclick = () => {
   cleanupRoom();
   showScreen('start');
-};
-
-document.querySelector('#waitingBack').onclick = () => {
-  if (confirm('Leave the room?')) { cleanupRoom(); showScreen('lobby'); }
 };
 
 // ──────────────────────
@@ -462,12 +429,4 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeRules()
 refreshPlayers();
 renderScores(state.players);
 refreshCustomCards();
-refreshDeadPile();
 setupDebug({ getRoomCustomCards: () => (roomData && roomData.customCards) || [] });
-
-// Register the service worker so the app installs and works offline for solo.
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('sw.js').catch(err => console.warn('SW registration failed:', err));
-  });
-}

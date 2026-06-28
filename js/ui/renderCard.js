@@ -1,6 +1,5 @@
 import { flip as soundFlip, omg as soundOmg } from '../core/sound.js';
 
-const sceneEl  = document.querySelector('.card-scene');
 const cardEl   = document.querySelector('#card');
 const levelEl  = document.querySelector('#cardLevel');
 const typeEl   = document.querySelector('#cardType');
@@ -23,12 +22,6 @@ function present(level, id) {
   if (isNew) {
     cardEl.dataset.cardId = idStr;
     cardEl.classList.remove('revealed');
-    // Deal motion: the card pops off the deck stack while it flips.
-    if (sceneEl) {
-      sceneEl.classList.remove('dealing');
-      void sceneEl.offsetWidth;
-      sceneEl.classList.add('dealing');
-    }
     void cardEl.offsetWidth;            // restart the flip
     soundFlip();
     if (Number(level) === 4) soundOmg();

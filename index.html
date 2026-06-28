@@ -9,7 +9,6 @@
 
   <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg" />
   <link rel="apple-touch-icon" href="assets/icons/favicon.svg" />
-  <link rel="manifest" href="manifest.json" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -38,7 +37,6 @@
     <!-- Solo setup screen -->
     <section id="screen-setup" class="screen">
       <header class="topbar">
-        <button id="setupBack" class="ghost-btn back-btn" aria-label="Back">←</button>
         <h2>Setup</h2>
         <button id="resetAll" class="ghost-btn">Reset</button>
       </header>
@@ -69,8 +67,8 @@
           <label>
             Physical-contact cards?
             <select id="playerContact">
-              <option value="yes">Yes</option>
               <option value="no">No</option>
+              <option value="yes">Yes</option>
             </select>
           </label>
         </div>
@@ -80,19 +78,19 @@
 
       <div class="panel">
         <h3>Card levels</h3>
-        <p class="muted-center" style="text-align:left; margin:0 0 12px">All levels are on by default — untick any you'd rather skip.</p>
         <div class="checks">
           <label><input type="checkbox" class="levelCheck" value="1" checked /> L1 Icebreaker</label>
           <label><input type="checkbox" class="levelCheck" value="2" checked /> L2 Spicy</label>
-          <label><input type="checkbox" class="levelCheck" value="3" checked /> L3 Freaky</label>
-          <label><input type="checkbox" class="levelCheck" value="4" checked /> L4 OMG</label>
+          <label><input type="checkbox" class="levelCheck" value="3" /> L3 Freaky</label>
+          <label><input type="checkbox" class="levelCheck" value="4" /> L4 OMG</label>
         </div>
+        <p class="warning">Only play L3/L4 with adults who clearly opted in.</p>
       </div>
 
       <div class="panel">
         <h3>Safety settings</h3>
         <div class="checks">
-          <label><input id="allowContact" type="checkbox" checked /> Allow physical-contact cards</label>
+          <label><input id="allowContact" type="checkbox" /> Allow physical-contact cards</label>
           <label><input id="allowTarget"  type="checkbox" checked /> Allow cards that target another player</label>
           <label><input id="allowNever"   type="checkbox" checked /> Include Never Have I Ever</label>
           <label><input id="allowWould"   type="checkbox" checked /> Include Would You Rather</label>
@@ -189,12 +187,7 @@
 
     <!-- Waiting / lobby room screen -->
     <section id="screen-waiting" class="screen">
-      <header class="topbar">
-        <button id="waitingBack" class="ghost-btn back-btn" aria-label="Back">←</button>
-        <h2>Lobby</h2>
-        <span></span>
-      </header>
-      <div class="panel" style="text-align:center">
+      <div class="panel" style="text-align:center; margin-top:6vh">
         <p class="eyebrow">Room Code</p>
         <p id="waitingRoomCode" class="room-code-display">-----</p>
         <p class="tagline" style="margin:0 auto">Share this code with your friends.</p>
@@ -212,14 +205,14 @@
           Max card level
           <select id="mpMaxLevel">
             <option value="1">L1 Icebreaker only</option>
-            <option value="2">L1 + L2 Spicy</option>
+            <option value="2" selected>L1 + L2 Spicy</option>
             <option value="3">Up to L3 Freaky</option>
-            <option value="4" selected>All levels including L4 OMG</option>
+            <option value="4">All levels including L4 OMG</option>
           </select>
         </label>
         <div class="checks">
           <label><input id="mpAllowTarget"  type="checkbox" checked /> Allow cards that target another player</label>
-          <label><input id="mpAllowContact" type="checkbox" checked /> Allow physical-contact cards</label>
+          <label><input id="mpAllowContact" type="checkbox" /> Allow physical-contact cards</label>
         </div>
         <label style="margin-top:14px">
           Turn timer
@@ -282,9 +275,6 @@
           </svg>
           <span id="turnTimerLabel" class="tt-label">20</span>
         </div>
-        <div class="deck-stack" aria-hidden="true">
-          <span></span><span></span><span></span>
-        </div>
         <div id="card" class="card level-1">
           <div class="card-face card-back" aria-hidden="true"></div>
           <article class="card-face card-front">
@@ -304,14 +294,6 @@
       <div class="game-actions">
         <button id="didIt" class="secondary-btn">Did it / Answered</button>
         <button id="drink" class="danger-btn">Drink / Pass</button>
-      </div>
-
-      <div class="pile-row">
-        <button id="reshuffleCards" class="ghost-btn">🔀 Reshuffle current cards</button>
-        <div id="deadPile" class="dead-pile" hidden title="Cards already played">
-          <span class="dead-stack" aria-hidden="true"></span>
-          <span class="dead-count"><strong id="deadCount">0</strong> in dead pile</span>
-        </div>
       </div>
 
       <div class="scoreboard panel compact">
@@ -350,8 +332,8 @@
       <ul class="rules-list">
         <li><span class="lvl l1">L1</span> Icebreaker — light, funny warm-ups.</li>
         <li><span class="lvl l2">L2</span> Spicy — flirty and bold, still tame.</li>
-        <li><span class="lvl l3">L3</span> Freaky — bolder dares for grown-ups.</li>
-        <li><span class="lvl l4">L4</span> OMG — maximum chaos.</li>
+        <li><span class="lvl l3">L3</span> Freaky — adults only, consent-first dares.</li>
+        <li><span class="lvl l4">L4</span> OMG — high chaos. Adults who clearly opted in.</li>
       </ul>
 
       <h3>Modes</h3>
@@ -359,10 +341,10 @@
       <p><strong>Multiplayer</strong> — one person creates a room; everyone else joins with the code and every phone stays in sync.</p>
 
       <h3>Make it yours</h3>
-      <p>All levels are on by default — untick any you'd rather skip. Add your own <strong>custom cards</strong> in setup (or in the room, if you're the host).</p>
+      <p>Add your own <strong>custom cards</strong> in setup (or in the room, if you're the host), pick which levels are in play, and use the safety toggles to keep things comfortable.</p>
 
-      <h3>One rule</h3>
-      <p>If you don't want to do a card, just take the <strong>Drink / Pass</strong> and move on — no big deal. Drink responsibly (works just as well with a soft drink).</p>
+      <h3>Safety first</h3>
+      <p>Consent always wins. You can pass or skip anything — no one is ever forced. Keep L3/L4 to adults who opted in, and please drink responsibly (the game works just as well with a soft drink).</p>
 
       <button id="closeRules2" class="primary-btn wide" style="margin-top:18px">Got it</button>
     </div>
