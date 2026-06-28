@@ -5,15 +5,21 @@
    four --front URLs in the per-level rules below. */
 
 .card-scene {
-  width: min(86vw, 360px);
-  margin: 18px auto;
+  /* Height-capped so the whole game screen fits the viewport without scrolling.
+     Width follows from the 5:7 aspect ratio. */
+  height: min(52vh, 460px);
+  aspect-ratio: 5 / 7;
+  width: auto;
+  max-width: 86vw;
+  margin: 8px auto;
   perspective: 1600px;
 }
 
 .card {
   position: relative;
+  z-index: 1;
   width: 100%;
-  aspect-ratio: 5 / 7;
+  height: 100%;
   transform-style: preserve-3d;
   transition: transform 0.6s var(--ease);
   transform: rotateY(0deg);              /* idle: show the back */
@@ -103,6 +109,30 @@
 .level-2 { --ink: #ffe8dd; --glow: #ff5a3c; --front: url("../assets/cards/front-l2.svg"); }
 .level-3 { --ink: #ffe6f6; --glow: #ff5fcf; --front: url("../assets/cards/front-l3.svg"); }
 .level-4 { --ink: #ffd9f6; --glow: #ff4fe3; --front: url("../assets/cards/front-l4.svg"); }
+
+/* Deck of card-backs stacked behind the active card */
+.deck-stack { position: absolute; inset: 0; z-index: 0; }
+.deck-stack span {
+  position: absolute;
+  inset: 0;
+  border-radius: 28px;
+  background: center / cover no-repeat url("../assets/cards/back-main.svg");
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.5);
+}
+.deck-stack span:nth-child(1) { translate: 11px 12px; rotate: 3.5deg;  opacity: 0.45; }
+.deck-stack span:nth-child(2) { translate: 6px 7px;   rotate: -2.5deg; opacity: 0.65; }
+.deck-stack span:nth-child(3) { translate: 2px 3px;   rotate: 1.2deg;  opacity: 0.85; }
+
+/* Deal motion: the whole card pops off the deck while it flips. We animate the
+   scene (the perspective container) rather than .card itself — animating the
+   flipping element's transform would collapse its preserve-3d and break the
+   flip. Animating the parent leaves the child's 3D intact. */
+@keyframes deal-in {
+  0%   { translate: 14px -34px; scale: 0.84; opacity: 0.4; }
+  55%  { opacity: 1; }
+  100% { translate: 0 0; scale: 1; opacity: 1; }
+}
+.card-scene.dealing { animation: deal-in 0.5s var(--ease) both; }
 
 /* Turn timer — countdown ring badge above the card */
 .card-scene { position: relative; }
