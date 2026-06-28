@@ -5,7 +5,7 @@
 const KEY = 'freakquencySettings';
 
 const DEFAULTS = {
-  levels: { 1: true, 2: true, 3: true, 4: true },
+  levels: { 1: true, 2: true, 3: true, 4: true, 5: true },
   allowContact: true,
   allowTarget: true,
   allowNever: true,
