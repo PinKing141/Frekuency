@@ -251,13 +251,14 @@ h2 { margin: 0 0 10px; font-family: var(--font-display); font-size: 1.4rem; lett
   padding: 9px 15px;
 }
 
-/* Game screen fits the viewport: the card is height-capped and the scoreboard
-   takes whatever space is left, scrolling internally if there are many players. */
-#screen-game.active { gap: 0; }
+/* Game screen aims to fit the viewport, but scrolls as a safety net so nothing
+   (End game, the scoreboard, an opened drawer) can ever end up unreachable. */
+#screen-game.active { gap: 0; overflow-y: auto; padding-bottom: 76px; }
 #screen-game .game-header { flex: 0 0 auto; margin: 4px 0 8px; }
 #screen-game .room-bar { flex: 0 0 auto; }
 #screen-game .game-actions { flex: 0 0 auto; margin: 12px 0; }
 #screen-game .pile-row { flex: 0 0 auto; }
+#screen-game #endGame { flex: 0 0 auto; }
 #screen-game .score-drawer { flex: 0 0 auto; margin-top: 10px; }
 
 /* Collapsible scoreboard drawer — header bar always visible, body slides open. */
