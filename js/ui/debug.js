@@ -25,6 +25,12 @@ export function setupDebug({ getRoomCustomCards = () => [] } = {}) {
     localStorage.setItem(KEY, '1');
     btn.hidden = false;
   }
+  // Leave debug: forget the unlock, hide the 🐞 trigger, close the panel.
+  function lock() {
+    localStorage.removeItem(KEY);
+    btn.hidden = true;
+    closeModal();
+  }
 
   // URL unlock: ?debug=<code>
   if (new URLSearchParams(location.search).get('debug') === CODE) unlock();
@@ -69,7 +75,7 @@ export function setupDebug({ getRoomCustomCards = () => [] } = {}) {
     all.forEach(x => { counts[x.card.level] = (counts[x.card.level] || 0) + 1; });
     summaryEl.innerHTML =
       `Showing <strong>${shown.length}</strong> of <strong>${all.length}</strong> cards` +
-      ` &nbsp;·&nbsp; L1 ${counts[1] || 0} · L2 ${counts[2] || 0} · L3 ${counts[3] || 0} · L4 ${counts[4] || 0}`;
+      ` &nbsp;·&nbsp; L1 ${counts[1] || 0} · L2 ${counts[2] || 0} · L3 ${counts[3] || 0} · L4 ${counts[4] || 0} · WILD ${counts[5] || 0}`;
 
     let html = '';
     let lastLevel = null;
@@ -97,6 +103,7 @@ export function setupDebug({ getRoomCustomCards = () => [] } = {}) {
 
   btn.onclick = openModal;
   document.querySelector('#closeDebug').onclick = closeModal;
+  document.querySelector('#lockDebug')?.addEventListener('click', lock);
   modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
   searchEl.addEventListener('input', render);
   document.addEventListener('keydown', e => {

@@ -1,0 +1,49 @@
+rules_version = '2';
+
+// Freakquency multiplayer rooms.
+//
+// Identity model: every client signs in anonymously (so request.auth != null),
+// but a player's in-game identity is a separate `playerId` stored in the room
+// document — two people in the same browser share one anon uid, so the uid
+// can't be trusted as the player key. That means these rules can require a
+// signed-in caller and protect the room's immutable fields, but they can't
+// fully prove "you are a member of this room". For a stricter model, store each
+// player under their auth uid (or move writes behind a Cloud Function).
+//
+// Rooms self-expire via `expireAt`. Pair these rules with a Firestore TTL
+// policy on the `expireAt` field so abandoned rooms are reaped server-side even
+// if no client runs the opportunistic cleanup.
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    match /rooms/{code} {
+      // Anyone signed in can read a room (needed to join and to live-sync).
+      allow read: if request.auth != null;
+
+      // Create a fresh room: must be signed in, start in the waiting state,
+      // and name yourself as host with a sane code + expiry.
+      allow create: if request.auth != null
+        && request.resource.data.status == 'waiting'
+        && request.resource.data.hostId is string
+        && request.resource.data.code == code
+        && request.resource.data.expireAt is timestamp;
+
+      // Update gameplay state: must be signed in, and the room's identity
+      // (code + host) can never change after creation.
+      allow update: if request.auth != null
+        && request.resource.data.code == resource.data.code
+        && request.resource.data.hostId == resource.data.hostId;
+
+      // Only expired rooms may be deleted (matches the opportunistic cleanup);
+      // a TTL policy on expireAt is the real safety net.
+      allow delete: if request.auth != null
+        && resource.data.expireAt < request.time;
+    }
+
+    // Everything else is closed by default.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

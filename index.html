@@ -315,8 +315,8 @@
       </div>
 
       <div class="game-actions">
-        <button id="didIt" class="secondary-btn">Did it / Answered</button>
-        <button id="drink" class="danger-btn">Drink / Pass</button>
+        <button id="didIt" class="secondary-btn">Done</button>
+        <button id="drink" class="danger-btn">Drink</button>
       </div>
 
       <div class="pile-row">
@@ -327,9 +327,15 @@
         </div>
       </div>
 
-      <div class="scoreboard panel compact">
-        <h3>Scoreboard</h3>
-        <ul id="scoreList"></ul>
+      <div id="scoreDrawer" class="score-drawer panel">
+        <button id="scoreToggle" class="score-drawer-head" aria-expanded="false" aria-controls="scoreBody">
+          <span class="score-drawer-title">Scoreboard <span id="scoreLeader" class="score-leader"></span></span>
+          <span class="score-chev" aria-hidden="true">▾</span>
+        </button>
+        <div id="scoreBody" class="score-drawer-body">
+          <ul id="scoreList"></ul>
+          <button id="endGame" class="ghost-btn wide" style="margin-top:10px">🏁 End game &amp; awards</button>
+        </div>
       </div>
     </section>
 
@@ -354,6 +360,14 @@
       <button id="closeSettings" class="ghost-btn modal-close" aria-label="Close">✕</button>
       <h2>Game settings</h2>
       <p style="text-align:left">Everything's on by default — switch off anything you don't want in play.</p>
+
+      <h3>After Dark intensity</h3>
+      <p style="text-align:left; margin:0 0 8px">Slides how often the freaky stuff shows up. Levels you switch off below still never appear — this just changes the mix of what's left.</p>
+      <div class="intensity">
+        <input id="intensity" type="range" min="0" max="5" step="1" value="2"
+               aria-label="After Dark intensity" />
+        <div class="intensity-label"><strong id="intensityName">Spicy</strong></div>
+      </div>
 
       <h3>Card levels</h3>
       <div class="checks">
@@ -391,6 +405,18 @@
     </div>
   </div>
 
+  <!-- End-of-game awards -->
+  <div id="awardsModal" class="modal" role="dialog" aria-modal="true" aria-label="Most Wanted awards">
+    <div class="modal-card panel" style="text-align:center">
+      <button id="closeAwards" class="ghost-btn modal-close" aria-label="Close">✕</button>
+      <h2>🏆 Most Wanted</h2>
+      <p style="text-align:center">The night's verdicts, tallied from who did it and who drank.</p>
+      <ul id="awardsList" class="awards-list"></ul>
+      <button id="awardsPlayAgain" class="primary-btn wide" style="margin-top:16px">Play again (reset scores)</button>
+      <button id="awardsClose2" class="ghost-btn wide" style="margin-top:10px">Keep playing</button>
+    </div>
+  </div>
+
   <!-- Hidden card debug (unlocked by code) -->
   <button id="debugBtn" class="debug-toggle" hidden aria-label="Card debug" title="Card debug">🐞</button>
 
@@ -401,6 +427,7 @@
       <p id="debugSummary" class="dbg-summary"></p>
       <input id="debugSearch" type="text" placeholder="Search text, id, type, tag…" />
       <ul id="debugList"></ul>
+      <button id="lockDebug" class="ghost-btn wide" style="margin-top:14px">🔒 Lock &amp; exit debug</button>
     </div>
   </div>
 

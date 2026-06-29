@@ -91,6 +91,32 @@
 .rules-list .lvl.l4 { color: var(--l4); box-shadow: 0 0 14px -5px var(--l4); }
 .rules-list .lvl.l5 { color: var(--gold); box-shadow: 0 0 14px -5px var(--gold); }
 
+/* End-of-game "Most Wanted" awards */
+.awards-list { list-style: none; padding: 0; margin: 16px 0 0; display: grid; gap: 12px; }
+.awards-list .awards-empty { color: var(--muted); text-align: center; padding: 14px; }
+.award {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  text-align: left;
+  background: var(--glass);
+  border: 1px solid var(--stroke);
+  border-radius: 16px;
+  padding: 12px 14px;
+  animation: row-in 0.3s var(--ease) both;
+}
+.award-icon { font-size: 1.8rem; flex: 0 0 auto; }
+.award-text { display: flex; flex-direction: column; gap: 1px; }
+.award-text strong { color: var(--text); font-size: 1.05rem; }
+.award-title {
+  color: var(--accent);
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.award-sub { color: var(--muted); font-size: 0.82rem; }
+
 /* Card debug — floating trigger (bottom-left, only shown when unlocked) */
 .debug-toggle {
   position: fixed;

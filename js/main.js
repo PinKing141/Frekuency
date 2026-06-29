@@ -180,6 +180,21 @@ function initSettingsUI() {
   toggle('allowNever',   'allowNever');
   toggle('allowWould',   'allowWould');
 
+  const intensity = document.querySelector('#intensity');
+  const intensityName = document.querySelector('#intensityName');
+  if (intensity) {
+    const setName = () => {
+      if (intensityName) intensityName.textContent = INTENSITY_NAMES[Number(intensity.value)] || 'Spicy';
+    };
+    intensity.value = String(settings.intensity ?? 2);
+    setName();
+    intensity.oninput = () => {
+      settings.intensity = Number(intensity.value);
+      setName();
+      saveSettings();
+    };
+  }
+
   const timer = document.querySelector('#timerSeconds');
   if (timer) {
     timer.value = String(settings.timerSeconds || 0);
@@ -187,6 +202,8 @@ function initSettingsUI() {
   }
   renderSettingsCategories();
 }
+
+const INTENSITY_NAMES = ['Plain', 'Soft', 'Spicy', 'Freaky', 'Nasty', 'Unhinged'];
 
 function openSettings()  { settingsModal.classList.add('open'); }
 function closeSettings() { settingsModal.classList.remove('open'); }
@@ -218,6 +235,13 @@ function handleDrawCard() {
 
 function handleNextTurn(scored) {
   if (!state.players.length) return;
+  // Tally for the end-of-game awards: a "Done" is a completed card, a "Drink"
+  // is a dodge. advanceTurn handles the score; we just track the drink count.
+  const cur = state.players[state.turn % state.players.length];
+  if (cur) {
+    if (scored) cur.dids = (cur.dids || 0) + 1;
+    else cur.drinks = (cur.drinks || 0) + 1;
+  }
   // The card that was on screen is done — set it aside in the dead pile.
   if (state.currentCard) { killCard(state.currentCard.id); refreshDeadPile(); }
   advanceTurn(scored);
@@ -463,6 +487,92 @@ document.querySelector('#resetAll').onclick = () => {
   resetTurn();
   refreshDeadPile();
   refreshPlayers();
+  renderScores(state.players);
+};
+
+// ──────────────────────
+// Scoreboard drawer + end-of-game awards
+// ──────────────────────
+
+const scoreToggle = document.querySelector('#scoreToggle');
+const scoreDrawer = document.querySelector('#scoreDrawer');
+if (scoreToggle && scoreDrawer) {
+  scoreToggle.onclick = () => {
+    const open = scoreDrawer.classList.toggle('open');
+    scoreToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  };
+}
+
+// Pick the player with the highest value of fn(p); ties break to the first.
+function topBy(players, fn) {
+  return players.reduce((best, p) => (fn(p) > fn(best) ? p : best), players[0]);
+}
+function bottomBy(players, fn) {
+  return players.reduce((best, p) => (fn(p) < fn(best) ? p : best), players[0]);
+}
+
+// Build the "Most Wanted" awards from the tallies gathered this game.
+function computeAwards(players) {
+  const named = players.filter(p => p && p.name);
+  if (named.length < 1) return [];
+  const dids   = p => p.score || p.dids || 0;
+  const drinks = p => p.drinks || p.drinksTaken || 0;
+  const total  = named.reduce((s, p) => s + dids(p) + drinks(p), 0);
+  if (total === 0) return [];
+
+  const awards = [];
+  const push = (icon, title, who, sub) => { if (who) awards.push({ icon, title, who: who.name, sub }); };
+
+  push('😈', 'Most Shameless', topBy(named, dids), 'did the most cards');
+  push('🥃', 'Biggest Drink Dodger', topBy(named, drinks), 'took the most drinks');
+  if (named.length > 1) {
+    push('😇', 'Most Innocent-Looking Menace', bottomBy(named, dids), 'kept the lowest body count… allegedly');
+  }
+  // A bit of chaos: random "Most Wanted" sash.
+  const wanted = named[Math.floor(Math.random() * named.length)];
+  push('🔥', 'Most Wanted', wanted, 'the room has decided');
+  return awards;
+}
+
+function renderAwards(players) {
+  const list = document.querySelector('#awardsList');
+  if (!list) return false;
+  const awards = computeAwards(players);
+  list.innerHTML = '';
+  if (!awards.length) {
+    list.innerHTML = '<li class="awards-empty">Play a few cards first, then end the game to crown the winners.</li>';
+    return true;
+  }
+  awards.forEach(a => {
+    const li = document.createElement('li');
+    li.className = 'award';
+    li.innerHTML =
+      `<span class="award-icon">${a.icon}</span>` +
+      `<span class="award-text"><strong>${escapeHtml(a.who)}</strong>` +
+      `<span class="award-title">${escapeHtml(a.title)}</span>` +
+      `<span class="award-sub">${escapeHtml(a.sub)}</span></span>`;
+    list.appendChild(li);
+  });
+  return true;
+}
+
+const awardsModal = document.querySelector('#awardsModal');
+function openAwards() {
+  const players = mpMode && roomData ? roomData.players : state.players;
+  renderAwards(players || []);
+  awardsModal.classList.add('open');
+}
+function closeAwards() { awardsModal.classList.remove('open'); }
+
+document.querySelector('#endGame').onclick = openAwards;
+document.querySelector('#closeAwards').onclick = closeAwards;
+document.querySelector('#awardsClose2').onclick = closeAwards;
+document.querySelector('#awardsPlayAgain').onclick = () => {
+  closeAwards();
+  if (mpMode) return;   // scores live in the room for multiplayer
+  state.players.forEach(p => { p.score = 0; p.dids = 0; p.drinks = 0; });
+  resetTurn();
+  refreshDeadPile();
   renderScores(state.players);
 };
 
