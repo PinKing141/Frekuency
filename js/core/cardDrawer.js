@@ -90,6 +90,7 @@ export function drawCardForRoom(room) {
     level: card.level,
     type: card.type,
     icon: card.icon,
+    timer: card.timer || 0,
     resolvedText,
     currentPlayerName: current.name
   };

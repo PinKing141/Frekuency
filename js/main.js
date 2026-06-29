@@ -212,7 +212,8 @@ function handleDrawCard() {
   const result = drawCard();
   if (!result) return alert('No cards match these settings. Turn on more levels or update players.');
   renderCard(result);
-  startTimer(soloTimerSeconds(), onTimerExpire);
+  // A card's own timer (timed dares) wins over the turn-timer setting.
+  startTimer(result.card.timer || soloTimerSeconds(), onTimerExpire);
 }
 
 function handleNextTurn(scored) {
@@ -251,7 +252,7 @@ function onRoomUpdate(room) {
       renderRoomCard(room.currentCard);
       if (room.currentCard.id !== lastRoomCardId) {
         lastRoomCardId = room.currentCard.id;
-        startTimer((room.settings && room.settings.timerSeconds) || 0, onTimerExpire);
+        startTimer(room.currentCard.timer || (room.settings && room.settings.timerSeconds) || 0, onTimerExpire);
       }
     }
     renderMultiplayerScores(room.players);
