@@ -3,7 +3,7 @@ import { state } from './core/gameState.js';
 import { addPlayer, removePlayer, resetPlayers } from './core/playerManager.js';
 import { drawCard, drawCardForRoom, killCard, reshuffleCurrent } from './core/cardDrawer.js';
 import { advanceTurn, resetTurn } from './core/turnManager.js';
-import { clearPlayers } from './core/storage.js';
+import { clearPlayers, savePlayers } from './core/storage.js';
 import { customCards, addCustomCard, removeCustomCard, buildCustomCard } from './core/customCards.js';
 import { settings, saveSettings } from './core/settings.js';
 import { categories, addCategory, removeCategory, categoryName } from './core/categories.js';
@@ -96,6 +96,13 @@ function refreshCustomCards() {
 
 function soloTimerSeconds() {
   return Number(settings.timerSeconds) || 0;
+}
+
+// Zero every player's tally — used when a fresh session starts and when one ends
+// (begin, leave back to setup, or "play again" after the awards).
+function resetScores() {
+  state.players.forEach(p => { p.score = 0; p.dids = 0; p.drinks = 0; });
+  savePlayers(state.players);
 }
 
 // --- Categories (custom card groups) ---
@@ -382,7 +389,12 @@ document.querySelector('#backSetup').onclick = () => {
   if (mpMode) {
     if (confirm('Leave the room?')) { cleanupRoom(); showScreen('start'); }
   } else {
+    // Leaving a solo game ends the session: clear scores + dead pile.
     stopTimer();
+    resetScores();
+    resetTurn();
+    renderScores(state.players);
+    refreshDeadPile();
     showScreen('setup');
   }
 };
@@ -452,6 +464,7 @@ settingsModal.addEventListener('click', e => { if (e.target === settingsModal) c
 document.querySelector('#beginGame').onclick = () => {
   if (state.players.length < 2) return alert('Add at least 2 players.');
   resetTurn();           // fresh session: clear dead pile + rotation
+  resetScores();         // …and start everyone back at zero
   refreshDeadPile();
   showScreen('game');
   renderScores(state.players);
@@ -570,7 +583,7 @@ document.querySelector('#awardsClose2').onclick = closeAwards;
 document.querySelector('#awardsPlayAgain').onclick = () => {
   closeAwards();
   if (mpMode) return;   // scores live in the room for multiplayer
-  state.players.forEach(p => { p.score = 0; p.dids = 0; p.drinks = 0; });
+  resetScores();
   resetTurn();
   refreshDeadPile();
   renderScores(state.players);
