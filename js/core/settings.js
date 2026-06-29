@@ -10,6 +10,7 @@ const DEFAULTS = {
   allowTarget: true,
   allowNever: true,
   allowWould: true,
+  intensity: 2,    // After Dark intensity 0–5 (Plain → Unhinged); weights the draw
   timerSeconds: 0,
   categories: {}   // custom category id -> enabled (missing = enabled by default)
 };

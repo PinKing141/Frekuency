@@ -23,15 +23,36 @@ function cardAllowed(card, current) {
 const DUO_BOOST = ['2p', 'duel', 'target', 'kiss', 'contact', 'freaky', 'omg'];
 const DUO_DAMPEN = ['group', 'vote'];
 
-// In a 2-player game, bias the draw towards intimate 1-on-1 cards and away from
-// group/vote prompts by repeating boosted cards in the sampling pool. For 3+
-// players the pool is unchanged.
-function weightedPool(allowed, playerCount) {
-  if (playerCount !== 2) return allowed;
+// After Dark intensity (0–5): per-level draw weights [L1, L2, L3, L4, Wildcard].
+// Disabled levels are still never shown — this only re-mixes what's enabled, so
+// "Soft" can keep L4 on but make it rare, and "Unhinged" buries the icebreakers.
+const INTENSITY = [
+  [6, 3, 1, 1, 1],  // 0 Plain
+  [4, 4, 2, 1, 1],  // 1 Soft
+  [2, 4, 3, 2, 1],  // 2 Spicy (default)
+  [1, 2, 4, 3, 2],  // 3 Freaky
+  [1, 1, 3, 5, 3],  // 4 Nasty
+  [1, 1, 2, 6, 4],  // 5 Unhinged
+];
+
+function intensityWeight(card, intensity) {
+  const row = INTENSITY[Math.max(0, Math.min(5, intensity | 0))] || INTENSITY[2];
+  return row[(card.level || 1) - 1] || 1;
+}
+
+// Build the sampling pool: repeat each allowed card by its intensity weight, and
+// in a 2-player game boost intimate 1-on-1 cards (and dampen group/vote ones).
+// Copies are capped so the pool can't blow up. For 3+ players with default
+// intensity this is effectively the plain allowed list.
+function weightedPool(allowed, playerCount, intensity = 2) {
   const pool = [];
   for (const card of allowed) {
-    if (card.tags.some(t => DUO_DAMPEN.includes(t))) { pool.push(card); continue; }
-    const copies = card.tags.some(t => DUO_BOOST.includes(t)) ? 4 : 1;
+    let copies = intensityWeight(card, intensity);
+    if (playerCount === 2) {
+      if (card.tags.some(t => DUO_DAMPEN.includes(t))) copies = 1;
+      else if (card.tags.some(t => DUO_BOOST.includes(t))) copies *= 3;
+    }
+    copies = Math.max(1, Math.min(15, copies));
     for (let i = 0; i < copies; i++) pool.push(card);
   }
   return pool;
@@ -53,7 +74,7 @@ export function drawCard() {
   const allowed = deck.filter(card => cardAllowed(card, current) && !state.deadPile.includes(card.id));
   if (!allowed.length) return null;
 
-  const pool = weightedPool(allowed, state.players.length);
+  const pool = weightedPool(allowed, state.players.length, settings.intensity);
   let card = pool[Math.floor(Math.random() * pool.length)];
   let attempts = 0;
   while (state.usedCards.includes(card.id) && attempts < 30) {
@@ -102,7 +123,7 @@ export function drawCardForRoom(room) {
 
   if (!allowed.length) return null;
 
-  const pool = weightedPool(allowed, players.length);
+  const pool = weightedPool(allowed, players.length, settings.intensity ?? 2);
   let card = pool[Math.floor(Math.random() * pool.length)];
   let attempts = 0;
   while (usedCardIds.includes(card.id) && attempts < 30) {
