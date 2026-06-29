@@ -258,12 +258,54 @@ h2 { margin: 0 0 10px; font-family: var(--font-display); font-size: 1.4rem; lett
 #screen-game .room-bar { flex: 0 0 auto; }
 #screen-game .game-actions { flex: 0 0 auto; margin: 12px 0; }
 #screen-game .pile-row { flex: 0 0 auto; }
-.scoreboard { margin-top: 10px; }
-#screen-game .scoreboard {
-  flex: 1 1 auto;
-  min-height: 0;
+#screen-game .score-drawer { flex: 0 0 auto; margin-top: 10px; }
+
+/* Collapsible scoreboard drawer — header bar always visible, body slides open. */
+.score-drawer { padding: 0; overflow: hidden; }
+.score-drawer-head {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 14px 16px;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  color: var(--text);
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.score-drawer-title { display: flex; align-items: baseline; gap: 8px; }
+.score-leader {
+  font-family: var(--font-body);
+  font-size: 0.74rem;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--cyan);
+}
+.score-chev { transition: transform 0.25s var(--ease); color: var(--muted); }
+.score-drawer.open .score-chev { transform: rotate(180deg); }
+.score-drawer-body {
+  max-height: 0;
   overflow-y: auto;
-  margin-top: 10px;
+  transition: max-height 0.28s var(--ease);
+  padding: 0 16px;
+}
+.score-drawer.open .score-drawer-body { max-height: 46vh; padding: 0 16px 14px; }
+.score-stat { color: var(--muted); font-size: 0.85rem; font-variant-numeric: tabular-nums; }
+
+/* After Dark intensity slider */
+.intensity { margin: 0 0 6px; }
+.intensity input[type="range"] { width: 100%; accent-color: var(--accent); }
+.intensity-label { text-align: center; margin-top: 4px; }
+.intensity-label strong {
+  font-family: var(--font-display);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
 }
 
 /* Dead pile + reshuffle row */
