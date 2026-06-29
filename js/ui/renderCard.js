@@ -46,7 +46,7 @@ export function renderCard({ card, text, current }) {
   typeEl.textContent   = card.type;
   iconEl.textContent   = card.icon;
   textEl.textContent   = text;
-  footerEl.textContent = 'Do it, answer honestly, or drink/pass.';
+  footerEl.textContent = card.drink || 'Do it, answer honestly, or drink/pass.';
   present(card.level, card.id);
 }
 
@@ -58,6 +58,6 @@ export function renderRoomCard(roomCard) {
   typeEl.textContent   = roomCard.type;
   iconEl.textContent   = roomCard.icon;
   textEl.textContent   = roomCard.resolvedText;
-  footerEl.textContent = 'Do it, answer honestly, or drink/pass.';
+  footerEl.textContent = roomCard.drink || 'Do it, answer honestly, or drink/pass.';
   present(roomCard.level, roomCard.id);
 }

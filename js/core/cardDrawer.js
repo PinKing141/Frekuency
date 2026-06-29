@@ -19,6 +19,33 @@ function cardAllowed(card, current) {
   return true;
 }
 
+// Tags that make a card shine in a 1-on-1 game, and ones that fall flat there.
+const DUO_BOOST = ['2p', 'duel', 'target', 'kiss', 'contact', 'freaky', 'omg'];
+const DUO_DAMPEN = ['group', 'vote'];
+
+// In a 2-player game, bias the draw towards intimate 1-on-1 cards and away from
+// group/vote prompts by repeating boosted cards in the sampling pool. For 3+
+// players the pool is unchanged.
+function weightedPool(allowed, playerCount) {
+  if (playerCount !== 2) return allowed;
+  const pool = [];
+  for (const card of allowed) {
+    if (card.tags.some(t => DUO_DAMPEN.includes(t))) { pool.push(card); continue; }
+    const copies = card.tags.some(t => DUO_BOOST.includes(t)) ? 4 : 1;
+    for (let i = 0; i < copies; i++) pool.push(card);
+  }
+  return pool;
+}
+
+// {target} resolves to the OTHER player's name in a duo, else a chooser phrase.
+function targetFor(players, current) {
+  if (players.length === 2) {
+    const other = players.find(p => p !== current);
+    if (other) return other.name;
+  }
+  return randomTargetPhrase();
+}
+
 export function drawCard() {
   const current = state.players[state.turn % state.players.length];
   const deck = [...cards, ...customCards];
@@ -26,19 +53,20 @@ export function drawCard() {
   const allowed = deck.filter(card => cardAllowed(card, current) && !state.deadPile.includes(card.id));
   if (!allowed.length) return null;
 
-  let card = allowed[Math.floor(Math.random() * allowed.length)];
+  const pool = weightedPool(allowed, state.players.length);
+  let card = pool[Math.floor(Math.random() * pool.length)];
   let attempts = 0;
   while (state.usedCards.includes(card.id) && attempts < 30) {
-    card = allowed[Math.floor(Math.random() * allowed.length)];
+    card = pool[Math.floor(Math.random() * pool.length)];
     attempts++;
   }
 
   state.usedCards.push(card.id);
-  if (state.usedCards.length > Math.min(deck.length, 25)) state.usedCards.shift();
+  if (state.usedCards.length > Math.min(allowed.length, 25)) state.usedCards.shift();
 
   const text = card.text
     .replaceAll('{player}', current.name)
-    .replaceAll('{target}', randomTargetPhrase());
+    .replaceAll('{target}', targetFor(state.players, current));
 
   state.currentCard = card;
   return { card, text, current };
@@ -74,16 +102,17 @@ export function drawCardForRoom(room) {
 
   if (!allowed.length) return null;
 
-  let card = allowed[Math.floor(Math.random() * allowed.length)];
+  const pool = weightedPool(allowed, players.length);
+  let card = pool[Math.floor(Math.random() * pool.length)];
   let attempts = 0;
   while (usedCardIds.includes(card.id) && attempts < 30) {
-    card = allowed[Math.floor(Math.random() * allowed.length)];
+    card = pool[Math.floor(Math.random() * pool.length)];
     attempts++;
   }
 
   const resolvedText = card.text
     .replaceAll('{player}', current.name)
-    .replaceAll('{target}', randomTargetPhrase());
+    .replaceAll('{target}', targetFor(players, current));
 
   return {
     id: card.id,
@@ -91,6 +120,7 @@ export function drawCardForRoom(room) {
     type: card.type,
     icon: card.icon,
     timer: card.timer || 0,
+    drink: card.drink || '',
     resolvedText,
     currentPlayerName: current.name
   };
