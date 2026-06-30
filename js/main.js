@@ -3,6 +3,9 @@ import { state } from './core/gameState.js';
 import { addPlayer, removePlayer, resetPlayers } from './core/playerManager.js';
 import { drawCard, drawCardForRoom, killCard, reshuffleCurrent } from './core/cardDrawer.js';
 import { advanceTurn, resetTurn } from './core/turnManager.js';
+import { recordOutcome, resetStats } from './core/scoring.js';
+import { calculateAwards } from './core/endGame.js';
+import { increaseChaos, resetChaos } from './core/chaosMeter.js';
 import { clearPlayers, savePlayers } from './core/storage.js';
 import { customCards, addCustomCard, removeCustomCard, buildCustomCard } from './core/customCards.js';
 import { settings, saveSettings } from './core/settings.js';
@@ -98,10 +101,11 @@ function soloTimerSeconds() {
   return Number(settings.timerSeconds) || 0;
 }
 
-// Zero every player's tally — used when a fresh session starts and when one ends
-// (begin, leave back to setup, or "play again" after the awards).
+// Zero every player's tally + the chaos meter — used when a fresh session starts
+// and when one ends (begin, leave back to setup, or "play again").
 function resetScores() {
-  state.players.forEach(p => { p.score = 0; p.dids = 0; p.drinks = 0; });
+  resetStats(state.players);
+  resetChaos();
   savePlayers(state.players);
 }
 
@@ -242,16 +246,27 @@ function handleDrawCard() {
 
 function handleNextTurn(scored) {
   if (!state.players.length) return;
-  // Tally for the end-of-game awards: a "Done" is a completed card, a "Drink"
-  // is a dodge. advanceTurn handles the score; we just track the drink count.
-  const cur = state.players[state.turn % state.players.length];
-  if (cur) {
-    if (scored) cur.dids = (cur.dids || 0) + 1;
-    else cur.drinks = (cur.drinks || 0) + 1;
+  const cur  = state.players[state.turn % state.players.length];
+  const card = state.currentCard;
+
+  // Record the outcome (powers the scoreboard + end-game awards).
+  recordOutcome(cur, card, scored ? 'done' : 'drink');
+
+  // Escalate the chaos meter — the night gets messier, the draw gets wilder.
+  if (!scored) {
+    increaseChaos('pass');
+  } else {
+    increaseChaos('done');
+    if (card) {
+      if (card.level === 4) increaseChaos('l4');
+      if (card.level === 5) increaseChaos('wildcard');
+      if (card.tags && card.tags.includes('contact')) increaseChaos('contact');
+    }
   }
+
   // The card that was on screen is done — set it aside in the dead pile.
-  if (state.currentCard) { killCard(state.currentCard.id); refreshDeadPile(); }
-  advanceTurn(scored);
+  if (card) { killCard(card.id); refreshDeadPile(); }
+  advanceTurn();
   renderScores(state.players);
   handleDrawCard();
 }
@@ -516,41 +531,10 @@ if (scoreToggle && scoreDrawer) {
   };
 }
 
-// Pick the player with the highest value of fn(p); ties break to the first.
-function topBy(players, fn) {
-  return players.reduce((best, p) => (fn(p) > fn(best) ? p : best), players[0]);
-}
-function bottomBy(players, fn) {
-  return players.reduce((best, p) => (fn(p) < fn(best) ? p : best), players[0]);
-}
-
-// Build the "Most Wanted" awards from the tallies gathered this game.
-function computeAwards(players) {
-  const named = players.filter(p => p && p.name);
-  if (named.length < 1) return [];
-  const dids   = p => p.score || p.dids || 0;
-  const drinks = p => p.drinks || p.drinksTaken || 0;
-  const total  = named.reduce((s, p) => s + dids(p) + drinks(p), 0);
-  if (total === 0) return [];
-
-  const awards = [];
-  const push = (icon, title, who, sub) => { if (who) awards.push({ icon, title, who: who.name, sub }); };
-
-  push('😈', 'Most Shameless', topBy(named, dids), 'did the most cards');
-  push('🥃', 'Biggest Drink Dodger', topBy(named, drinks), 'took the most drinks');
-  if (named.length > 1) {
-    push('😇', 'Most Innocent-Looking Menace', bottomBy(named, dids), 'kept the lowest body count… allegedly');
-  }
-  // A bit of chaos: random "Most Wanted" sash.
-  const wanted = named[Math.floor(Math.random() * named.length)];
-  push('🔥', 'Most Wanted', wanted, 'the room has decided');
-  return awards;
-}
-
 function renderAwards(players) {
   const list = document.querySelector('#awardsList');
   if (!list) return false;
-  const awards = computeAwards(players);
+  const awards = calculateAwards(players);   // see core/endGame.js
   list.innerHTML = '';
   if (!awards.length) {
     list.innerHTML = '<li class="awards-empty">Play a few cards first, then end the game to crown the winners.</li>';
