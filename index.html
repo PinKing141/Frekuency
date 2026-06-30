@@ -309,7 +309,7 @@
               <div id="cardIcon" class="card-icon">🧊</div>
               <p id="cardText">Press New Card to start.</p>
             </div>
-            <p id="cardFooter">Do it, answer honestly, or drink/pass.</p>
+            <p id="cardFooter">Press DONE if you did it or answered. Press DRINK to take the penalty.</p>
           </article>
         </div>
       </div>
@@ -412,6 +412,9 @@
       <button id="closeAwards" class="ghost-btn modal-close" aria-label="Close">✕</button>
       <h2>🏆 Most Wanted</h2>
       <p style="text-align:center">The night's verdicts, tallied from who did it and who drank.</p>
+      <h3 class="endgame-heading">Final scoreboard</h3>
+      <ul id="finalScoreList" class="final-scores"></ul>
+      <h3 class="endgame-heading">The awards</h3>
       <ul id="awardsList" class="awards-list"></ul>
       <button id="awardsPlayAgain" class="primary-btn wide" style="margin-top:16px">Play again (reset scores)</button>
       <button id="awardsClose2" class="ghost-btn wide" style="margin-top:10px">Keep playing</button>
@@ -438,7 +441,7 @@
       <button id="closeRules" class="ghost-btn modal-close" aria-label="Close">✕</button>
       <h2>How to play</h2>
 
-      <p>Add players (or join a room), then draw cards. On your turn: read the card aloud and either <strong>do it / answer honestly</strong>, or take the <strong>Drink / Pass</strong> option. Then it's the next player.</p>
+      <p>Add players (or join a room), then draw cards. On your turn, read the card aloud. Press <strong>DONE</strong> if you did it or answered. Press <strong>DRINK</strong> if you're taking the penalty. Then it's the next player.</p>
 
       <h3>The levels</h3>
       <ul class="rules-list">
@@ -446,7 +449,7 @@
         <li><span class="lvl l2">L2</span> Spicy — flirty and bold, still tame.</li>
         <li><span class="lvl l3">L3</span> Freaky — bolder dares for grown-ups.</li>
         <li><span class="lvl l4">L4</span> OMG — maximum chaos.</li>
-        <li><span class="lvl l5">🃏</span> Wildcards — swaps, group votes & chaos mechanics you run yourselves.</li>
+        <li><span class="lvl l5">🃏</span> Wildcards — chaos cards: dares, upgrades, group choices, spin-the-bottle moments & final-round madness.</li>
       </ul>
 
       <h3>Modes</h3>
@@ -457,7 +460,7 @@
       <p>Everything's on by default — switch off anything you'd rather skip in <strong>⚙ Game settings</strong>. Write your own prompts and group them into categories under <strong>Custom Cards</strong>.</p>
 
       <h3>One rule</h3>
-      <p>If you don't want to do a card, just take the <strong>Drink / Pass</strong> and move on — no big deal. Drink responsibly (works just as well with a soft drink).</p>
+      <p>If you don't want to do a card, just press <strong>DRINK</strong> and move on — no big deal. Drink responsibly (works just as well with a soft drink).</p>
 
       <button id="closeRules2" class="primary-btn wide" style="margin-top:18px">Got it</button>
     </div>

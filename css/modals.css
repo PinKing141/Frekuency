@@ -117,6 +117,31 @@
 }
 .award-sub { color: var(--muted); font-size: 0.82rem; }
 
+/* End-of-game final scoreboard (above the awards) */
+.endgame-heading {
+  margin: 18px 0 8px;
+  font-family: var(--font-display);
+  font-size: 0.78rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--cyan);
+  text-align: left;
+}
+.final-scores { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
+.final-score {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--glass);
+  border: 1px solid var(--stroke);
+  border-radius: 14px;
+  padding: 10px 14px;
+  animation: row-in 0.3s var(--ease) both;
+}
+.final-rank { font-size: 1.15rem; flex: 0 0 auto; min-width: 28px; text-align: center; }
+.final-name { color: var(--text); font-weight: 700; flex: 1; text-align: left; }
+.final-tally { color: var(--muted); font-size: 0.82rem; font-variant-numeric: tabular-nums; }
+
 /* Card debug — floating trigger (bottom-left, only shown when unlocked) */
 .debug-toggle {
   position: fixed;

@@ -16,6 +16,7 @@ import { setupDebug } from './ui/debug.js';
 import { startTimer, stopTimer } from './ui/timer.js';
 import { renderCard, renderRoomCard } from './ui/renderCard.js';
 import { renderPlayers, renderScores } from './ui/renderPlayers.js';
+import { renderEndGame } from './ui/renderEndGame.js';
 import { escapeHtml } from './utils/helpers.js';
 
 // ── Multiplayer (Firebase) — loaded lazily ──
@@ -531,32 +532,10 @@ if (scoreToggle && scoreDrawer) {
   };
 }
 
-function renderAwards(players) {
-  const list = document.querySelector('#awardsList');
-  if (!list) return false;
-  const awards = calculateAwards(players);   // see core/endGame.js
-  list.innerHTML = '';
-  if (!awards.length) {
-    list.innerHTML = '<li class="awards-empty">Play a few cards first, then end the game to crown the winners.</li>';
-    return true;
-  }
-  awards.forEach(a => {
-    const li = document.createElement('li');
-    li.className = 'award';
-    li.innerHTML =
-      `<span class="award-icon">${a.icon}</span>` +
-      `<span class="award-text"><strong>${escapeHtml(a.who)}</strong>` +
-      `<span class="award-title">${escapeHtml(a.title)}</span>` +
-      `<span class="award-sub">${escapeHtml(a.sub)}</span></span>`;
-    list.appendChild(li);
-  });
-  return true;
-}
-
 const awardsModal = document.querySelector('#awardsModal');
 function openAwards() {
   const players = mpMode && roomData ? roomData.players : state.players;
-  renderAwards(players || []);
+  renderEndGame(players || [], calculateAwards(players || []));   // see ui/renderEndGame.js
   awardsModal.classList.add('open');
 }
 function closeAwards() { awardsModal.classList.remove('open'); }
