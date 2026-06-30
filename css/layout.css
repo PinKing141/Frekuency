@@ -255,6 +255,10 @@ h2 { margin: 0 0 10px; font-family: var(--font-display); font-size: 1.4rem; lett
    (End game, the scoreboard, an opened drawer) can ever end up unreachable. */
 #screen-game.active { gap: 0; overflow-y: auto; padding-bottom: 76px; }
 #screen-game .game-header { flex: 0 0 auto; margin: 4px 0 8px; }
+/* The card mustn't shrink to "make everything fit" — that's what stopped the
+   screen from ever overflowing (and scrolling). Keep its height fixed so the
+   column genuinely overflows and #screen-game scrolls. */
+#screen-game .card-scene { flex: 0 0 auto; }
 #screen-game .room-bar { flex: 0 0 auto; }
 #screen-game .game-actions { flex: 0 0 auto; margin: 12px 0; }
 #screen-game .pile-row { flex: 0 0 auto; }

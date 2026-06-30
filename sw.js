@@ -3,7 +3,7 @@
    still works with no connection). Cross-origin requests (fonts, Firebase) are
    left to the browser. Bump CACHE on each release to evict the old shell. */
 
-const CACHE = 'freakquency-v3';
+const CACHE = 'freakquency-v4';
 
 // Core shell, pre-cached so a cold offline launch has something to serve.
 const PRECACHE = [
