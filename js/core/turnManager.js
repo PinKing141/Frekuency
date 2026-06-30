@@ -5,9 +5,9 @@ export function getCurrentPlayer() {
   return state.players[state.turn % state.players.length];
 }
 
-export function advanceTurn(scored) {
-  const current = getCurrentPlayer();
-  if (scored) current.score = (current.score || 0) + 1;
+// Just advances the rotation + persists. Scoring lives in core/scoring.js now,
+// recorded by the caller before the turn advances.
+export function advanceTurn() {
   state.turn++;
   savePlayers(state.players);
 }
